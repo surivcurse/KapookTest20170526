@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:focusable="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="5dp">
+
+        <ImageView
+            android:layout_marginRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_extension"
+            />
+
+        <TextView
+            android:id="@+id/txtRendering"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="สิ่งที่ต้องเตรียม"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/buttonOn" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcvRenderingContrainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="top"
+            android:paddingBottom="20dp"
+            android:paddingTop="5dp">
+
+
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.v7.widget.CardView>
+
+    <TextView
+        android:padding="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text='กด "Enter", "ไป", "รีเทิร์น" เพื่อเพิ่มบรรทัดใหม่'/>
+
+
+</LinearLayout>

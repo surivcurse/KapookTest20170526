@@ -1,0 +1,216 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/llRenderingContrainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="top"
+    android:orientation="vertical"
+    android:paddingTop="5dp">
+
+    <RelativeLayout
+        android:id="@+id/rlDescriptionEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@color/bg_layout_howto_content"
+        android:clickable="true"
+        android:orientation="horizontal"
+        android:paddingBottom="10dp"
+        android:paddingTop="5dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/txtEditNumber"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/circle_background_wt"
+            android:gravity="center_vertical"
+            android:text="1"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnDragItem"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="9dp"
+            android:layout_toStartOf="@+id/btnDelete"
+            android:background="@drawable/bg_button_drag_blue"
+            android:foregroundGravity="right"
+            android:visibility="gone"
+            app:srcCompat="@drawable/button_drag_blue" />
+
+        <ImageButton
+            android:id="@+id/btnDelete"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/bg_button_3dot_black"
+            android:foregroundGravity="right"
+            android:scaleType="centerInside"
+            android:visibility="visible"
+            app:srcCompat="@android:drawable/ic_delete" />
+
+        <EditText
+            android:id="@+id/edtDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/txtEditNumber"
+            android:layout_margin="5dp"
+            android:background="@color/bg_howto_edittext"
+            android:gravity="left|top"
+            android:hint="@string/txt_howto_ds"
+            android:inputType="textMultiLine"
+            android:minHeight="100dp"
+            android:overScrollMode="always"
+            android:scrollHorizontally="false"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title" />
+
+        <Button
+            android:id="@+id/btnAddPhoto"
+            style="@android:style/Widget.Material.Light.Button.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edtDescription"
+            android:layout_centerHorizontal="true"
+            android:backgroundTint="@color/cardview_dark_background"
+            android:drawableLeft="@drawable/ic_camera_wt"
+            android:drawablePadding="3dp"
+            android:text="เพิ่มรูป"
+            android:textColor="@color/tw__solid_white"
+            android:visibility="visible" />
+
+        <ImageButton
+            android:id="@+id/btnDragUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edtDescription"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="9dp"
+            android:layout_toStartOf="@+id/btnDragDown"
+            android:background="@drawable/bg_button_3dot_black"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_up_blue" />
+
+        <ImageButton
+            android:id="@+id/btnDragDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/edtDescription"
+            android:layout_alignTop="@+id/btnDragUp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_toStartOf="@+id/btnAddPhoto"
+            android:background="@drawable/bg_button_3dot_black"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_down_blue" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlDescriptionView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@color/tw__solid_white"
+        android:clickable="true"
+        android:paddingBottom="20dp"
+        android:paddingTop="5dp"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/txtViewNumber"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/circle_background_gn"
+            android:gravity="center_vertical"
+            android:text="1"
+            android:textAlignment="center"
+            android:textColor="@color/tw__solid_white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnDeleteView"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/bg_button_3dot_black"
+            android:foregroundGravity="right"
+            android:scaleType="centerInside"
+            android:visibility="invisible"
+            app:srcCompat="@android:drawable/ic_delete" />
+
+        <TextView
+            android:id="@+id/txtViewDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_toEndOf="@+id/txtViewNumber"
+            android:layout_toStartOf="@+id/btnDeleteView"
+            android:layout_weight="0.8"
+            android:hint="@string/txt_howto_ds"
+            android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title" />
+
+
+        <ImageView
+            android:id="@+id/imgViewDescription"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/txtViewDescription"
+            android:layout_marginTop="10dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
+
+        <ImageButton
+            android:id="@+id/imgBtnSetting"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignEnd="@+id/imgViewDescription"
+            android:layout_alignTop="@+id/imgViewDescription"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/bgShadow"
+            android:scaleType="centerInside"
+            android:visibility="visible"
+            app:srcCompat="@drawable/ic_seting_wt" />
+
+        <ImageButton
+            android:id="@+id/imgBtnDeletePic"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignStart="@+id/imgBtnSetting"
+            android:layout_below="@+id/imgBtnSetting"
+            android:layout_marginTop="5dp"
+            android:background="@color/bgShadow"
+            android:scaleType="centerInside"
+            android:visibility="visible"
+            app:srcCompat="@drawable/ic_delete_wt" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/imgViewDescription"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:src="@drawable/layout_footer" />
+
+    </RelativeLayout>
+
+</LinearLayout>

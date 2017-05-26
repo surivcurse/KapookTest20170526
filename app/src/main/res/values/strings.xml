@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">KapookTest</string>
+    <string name="action_settings">Settings</string>
+    <string name="facebook_app_id">431298490556813</string>
+    <string name="line_channel_id">1510059629</string>
+    <string name="txt_login_title">เข้าสู่ระบบด้วย User Kapook</string>
+    <string name="fb_login_protocol_scheme">fb431298490556813</string>
+    <string name="btn_login_line">Continue with Line</string>
+
+
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="action_share">Share</string>
+    <string name="subscribe">Subscribe</string>
+    <string name="txt_howto">ฮาวทู</string>
+    <string name="txt_post">โพสต์</string>
+    <string name="txt_entry">เอนทรี</string>
+    <string name="txt_public">สาธารณะ</string>
+    <string name="txt_draft">ทำเป็นแบบร่าง</string>
+    <string name="txt_add_photo">เพิ่มรูปหน้าปก</string>
+    <string name="str_howto_title">เขียนชื่อเรื่องที่นี่...</string>
+    <string name="str_howto_subject">เกริ่นนำย่อๆไม่เกิน 300 ตัวอักษร</string>
+    <string name="txt_select_category">เลือกหมวดหมู่</string>
+    <string name="txt_howto_ds">เขียนขั้นตอน / วิธีดำเนินการ</string>
+    <string name="str_pic_from_device">รูปจากในเครื่อง</string>
+    <string name="str_pic_from_url">ใส่ลิ้งก์รูป(URL)</string>
+    <string name="str_open_camera">เปิดกล้องถ่ายรูป</string>
+    <string name="str_content">เนื้อหา...</string>
+    <string name="str_input_link">ใส่ลิงก์...</string>
+
+
+</resources>

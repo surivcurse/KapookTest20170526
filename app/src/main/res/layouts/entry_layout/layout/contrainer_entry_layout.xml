@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:layout_marginBottom="10dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <include layout="@layout/howto_header_profile" />
+
+        <include layout="@layout/content_paragraph1" />
+
+        <include layout="@layout/entry_content_paragraph2" />
+
+
+        <Button
+            android:id="@+id/btnPost"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_btn_post"
+            android:drawableLeft="@drawable/ic_done_white_36dp"
+            android:drawablePadding="3dp"
+            android:layout_gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:text="โพสต์เลย"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            android:textColor="@color/tw__solid_white" />
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>
+

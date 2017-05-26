@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llContrainer"
+    android:layout_width="300dp"
+    android:layout_height="200dp"
+    android:gravity="center"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <Button
+        android:id="@+id/btnPhotoDevice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/buttonOn"
+        android:drawableLeft="@drawable/ic_phone_white"
+        android:drawablePadding="10dp"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="80dp"
+        android:text="@string/str_pic_from_device"
+        android:textColor="@color/tw__solid_white" />
+
+    <Button
+        android:id="@+id/btnPhotoCamera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/buttonOn"
+        android:drawableLeft="@drawable/ic_camera_wt"
+        android:drawablePadding="10dp"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="80dp"
+        android:text="@string/str_open_camera"
+        android:textColor="@color/tw__solid_white" />
+
+    <Button
+        android:id="@+id/btnPhotoLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/buttonOn"
+        android:drawableLeft="@drawable/ic_link_white"
+        android:drawablePadding="10dp"
+        android:gravity="left|center_vertical"
+        android:paddingLeft="80dp"
+        android:text="@string/str_pic_from_url"
+        android:textColor="@color/tw__solid_white" />
+
+
+</LinearLayout>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal|center_vertical"
+    android:background="@color/colorPrimary"
+    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+    tools:context="com.app.me.kapooktest.LoginActivity">
+
+        <LinearLayout
+            android:id="@+id/layoutBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="13dp"
+            android:gravity="center_horizontal"
+            android:background="@drawable/selector_fieldset_background"
+            android:paddingBottom="20dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="30dp"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:textColor="@android:color/white"
+                    android:ems="10"
+                    android:layout_marginRight="5dp"
+                    android:text="Email" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textEmailAddress" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:textColor="@android:color/white"
+                    android:layout_marginRight="5dp"
+                    android:text="Password" />
+
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textPassword" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="20dp"
+                    android:text="เข้าสู่ระบบ" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/com_facebook_auth_dialog_cancel_background"
+                    android:text="ลืมรหัสผ่าน" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_below="@+id/imgLogo"
+        android:layout_centerHorizontal="true"
+        android:background="@color/bgTxtLoginTitle"
+        android:text="@string/txt_login_title"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_button"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/layoutBox"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp" />
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="match_parent"
+        android:layout_height="230dp"
+        android:layout_marginBottom="18dp"
+        android:src="@drawable/kapook_logo"
+        android:layout_above="@+id/layoutBox"
+        android:layout_alignParentStart="true" />
+
+
+    <ImageButton
+        android:id="@+id/imgBtnHome"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/imgLogo"
+        android:background="@drawable/com_facebook_auth_dialog_cancel_background"
+        android:src="@drawable/ic_home_black_24dp" />
+
+    <Button
+        android:id="@+id/imgBtnLine"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_below="@+id/login_button"
+        android:layout_centerHorizontal="true"
+        android:paddingRight="20dp"
+        android:background="#00c300"
+        android:drawableLeft="@mipmap/btn_base"
+        android:text="@string/btn_login_line"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"/>
+
+</RelativeLayout>

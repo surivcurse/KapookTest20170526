@@ -1,0 +1,237 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp"
+    android:minHeight="100dp"
+    android:clipToPadding="true"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
+
+
+    <LinearLayout
+        android:id="@+id/llRenderingContrainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="top"
+        android:orientation="vertical"
+        android:paddingTop="5dp">
+
+        <LinearLayout
+            android:id="@+id/llEntryContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@color/tw__solid_white"
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:paddingTop="5dp"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:id="@+id/rlEntryView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/tw__solid_white"
+                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/txtViewNumber"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/circle_background_gn"
+                    android:gravity="center_vertical"
+                    android:text="1"
+                    android:textAlignment="center"
+                    android:textColor="@color/tw__solid_white"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtViewEntryContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:layout_toEndOf="@+id/txtViewNumber"
+                    android:layout_toStartOf="@+id/btnDeleteView"
+                    android:layout_weight="0.8"
+                    android:hint="@string/str_content"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlEntryEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_layout_howto_content"
+                android:paddingBottom="10dp"
+                android:paddingTop="5dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/txtEditNumber"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/circle_background_wt"
+                    android:gravity="center_vertical"
+                    android:text="1"
+                    android:textAlignment="center"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <ImageButton
+                    android:id="@+id/btnDragItem"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="9dp"
+                    android:layout_toStartOf="@+id/btnDelete"
+                    android:background="@drawable/bg_button_drag_blue"
+                    android:foregroundGravity="right"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/button_drag_blue" />
+
+                <ImageButton
+                    android:id="@+id/btnDelete"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/bg_button_3dot_black"
+                    android:foregroundGravity="right"
+                    android:scaleType="centerInside"
+                    android:visibility="visible"
+                    app:srcCompat="@android:drawable/ic_delete" />
+
+                <EditText
+                    android:id="@+id/edtEntryContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_below="@+id/txtEditNumber"
+                    android:layout_margin="5dp"
+                    android:background="@color/bg_howto_edittext"
+                    android:gravity="left|top"
+                    android:hint="@string/str_content"
+                    android:inputType="textMultiLine"
+                    android:minHeight="100dp"
+                    android:overScrollMode="always"
+                    android:padding="5dp"
+                    android:scrollHorizontally="false"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars="vertical"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title" />
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rlEntryImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/imgViewDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="10dp"
+                    android:maxHeight="380dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"/>
+
+
+                <ImageButton
+                    android:id="@+id/imgBtnDeletePic"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginTop="15dp"
+                    android:background="@color/bgShadow"
+                    android:scaleType="centerInside"
+                    android:visibility="visible"
+                    app:srcCompat="@drawable/ic_delete_wt" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llButtonAddItem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/bgAddImage"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.3" />
+
+            <ImageButton
+                android:id="@+id/btnAddPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_button_3dot_black"
+                app:srcCompat="@drawable/ic_camera_blue" />
+
+            <ImageButton
+                android:id="@+id/btnAddVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_button_3dot_black"
+                app:srcCompat="@drawable/ic_video_blue" />
+
+            <ImageButton
+                android:id="@+id/btnAddLink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_button_3dot_black"
+                app:srcCompat="@drawable/ic_link_blue" />
+
+            <TextView
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.12" />
+
+            <ImageButton
+                android:id="@+id/btnDragUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_button_3dot_black"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_up_blue" />
+
+            <ImageButton
+                android:id="@+id/btnDragDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_button_3dot_black"
+                android:visibility="invisible"
+                app:srcCompat="@drawable/ic_down_blue" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>
+
+

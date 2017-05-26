@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#6db600</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#ff4081</color>
+    <color name="bgTxtLoginTitle">#e66db600</color>
+    <color name="line_basic_color">#00c300</color>
+    <color name="buttonOn">#0099ff</color>
+    <color name="bg_layout_howto_content">#d0e8f7</color>
+    <color name="bg_howto_edittext">#f0f9ff</color>
+    <color name="bg_btn_post">#02b866</color>
+    <color name="bgAddImage">#eeeeee</color>
+    <color name="bgShadow">#46000000</color>
+</resources>

@@ -1,0 +1,62 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+    <LinearLayout
+        android:id="@+id/layout_menu_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:orientation="horizontal"
+        android:background="#ffffff"
+        android:gravity="right|top"
+        android:paddingTop="20dp"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="top"
+            android:layout_height="60dp"
+            android:orientation="horizontal"
+            >
+
+            <com.facebook.share.widget.ShareButton
+                android:id="@+id/facebookShare"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="15dp"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerInside"
+                android:text=""
+                />
+
+            <ImageButton
+                android:id="@+id/imgBtnLineShare"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/selector_fieldset_background"
+                android:src="@mipmap/btn_base" />
+
+            <ImageButton
+                android:id="@+id/imgBtnTweetShare"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/ic_twitter_logo_white_on_blue"/>
+
+            <ImageButton
+                android:id="@+id/imgBtnGmailShare"
+                android:layout_width="60dp"
+                android:layout_height="match_parent"
+                android:src="@mipmap/gmail_icon"
+                android:background="@android:color/white"
+                android:layout_marginRight="15dp"
+                android:foreground="@drawable/gmail_icon" />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.design.widget.CoordinatorLayout>
+
