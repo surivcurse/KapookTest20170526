@@ -17,7 +17,7 @@ public class EntryModel {
     public static String TITLE = "";
     public static String SUBJECT = "";
 
-   public static ArrayList<EntryContentModel> entryContentList = new ArrayList<>();
+    public static ArrayList<EntryContentModel> entryContentList = new ArrayList<>();
 
     public static void swapContent(ArrayList arr,int fromContent,int toContent){
         arr.add(toContent,arr.get(fromContent));

@@ -24,6 +24,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.me.kapooktest.customclass.EntryRcvAdapter;
+import com.app.me.kapooktest.modelclass.EntryViewModel;
+
 import static com.app.me.kapooktest.modelclass.EntryModel.*;
 import static com.app.me.kapooktest.modelclass.ConstantModel.*;
 

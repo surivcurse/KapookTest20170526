@@ -30,6 +30,7 @@
     <string name="str_open_camera">เปิดกล้องถ่ายรูป</string>
     <string name="str_content">เนื้อหา...</string>
     <string name="str_input_link">ใส่ลิงก์...</string>
+    <string name="title_activity_entry_view">EntryViewActivity</string>
 
 
 </resources>

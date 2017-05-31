@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_edit"
+        android:title="แก้ไข"
+        app:showAsAction="ifRoom"
+        android:actionProviderClass=
+            "android.widget.ShareActionProvider"
+        android:icon="@drawable/ic_build_black_24px"/>
+    <item
+        android:id="@+id/action_delete"
+        android:title="ลบ"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_delete_forever_black_24px"/>
+</menu>

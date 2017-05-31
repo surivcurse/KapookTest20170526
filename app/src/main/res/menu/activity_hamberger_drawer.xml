@@ -1,9 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/entryView"
+        android:icon="@drawable/ic_create"
+        android:title="ดู Entry" />
+    <item
+        android:id="@+id/howtoView"
+        android:icon="@drawable/ic_howto_black"
+        android:title="ดู Howto" />
 
     <group android:checkableBehavior="single"
         android:id="@+id/item_group">
 
     </group>
+
+
 
 </menu>

@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:visibility="visible">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/ic_list_item" />
+
+        <TextView
+            android:paddingTop="5dp"
+            android:id="@+id/txtRendering"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="เรื่องเล่า"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+            android:textColor="@color/buttonOn" />
+
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rcvEntryContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"></android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/btnAddDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:background="@color/buttonOn"
+        android:drawableLeft="@drawable/ic_camera_wt"
+        android:drawablePadding="3dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:text="ส่งการบ้านหรือภาพรีวิว"
+        android:textColor="@color/tw__solid_white" />
+
+
+</LinearLayout>

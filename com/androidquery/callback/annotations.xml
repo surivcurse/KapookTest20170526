@@ -1,0 +1,8 @@
+<root>
+    <item name='com.androidquery.callback.AjaxCallback'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+    <item name='com.androidquery.callback.AjaxCallback AjaxCallback()'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+</root>

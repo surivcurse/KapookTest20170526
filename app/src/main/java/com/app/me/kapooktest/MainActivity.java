@@ -177,9 +177,12 @@ private Context context;
         final Menu menu = navigationView.getMenu();
 
         if(!ConstantModel.IS_Tabs_CHANGE){
-
-            menu.clear();
+            ConstantModel.TabsModel tab =  ConstantModel.getTabsModel(ConstantModel.getSizeListTabs()-1);
+            menu.removeGroup(R.id.item_group);
+            //menu.add(R.id.item_group,Menu.NONE,1,"");
+                    //Drawable icon = null;
             addNavigationItem(menu,ConstantModel.getAllTabs());
+
         }
     }
 
@@ -212,8 +215,16 @@ private Context context;
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
-        mViewPager.setCurrentItem(id);
+        switch (id){
+            case R.id.howtoView:
+                return true;
+            case R.id.entryView:
+                Intent entryViewActivity = new Intent(this.getApplicationContext() ,EntryViewActivity.class);
+                startActivityForResult (entryViewActivity,0);
+                return true;
+            default:
+                mViewPager.setCurrentItem(id);
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
