@@ -8,10 +8,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +22,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.me.kapooktest.customclass.EntryRcvAdapter;
-import com.app.me.kapooktest.modelclass.EntryViewModel;
 
 import static com.app.me.kapooktest.modelclass.EntryModel.*;
 import static com.app.me.kapooktest.modelclass.ConstantModel.*;
@@ -158,7 +155,7 @@ public class EntryActivity extends AppCompatActivity {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
 
 
-        rcvEntryContent = (RecyclerView) findViewById(R.id.rcvEntryContrainer);
+        rcvEntryContent = (RecyclerView) findViewById(R.id.rcvContentContrainer);
         rcvEntryContent.setHasFixedSize(true);
         rcvEntryContent.setLayoutManager(mLayoutManager);
         rcvEntryContent.setAdapter(entryRcvAdapter);

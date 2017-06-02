@@ -1,7 +1,5 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/llRenderingContrainer"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,7 +8,7 @@
     android:paddingTop="5dp">
 
     <LinearLayout
-        android:id="@+id/llEntryContent"
+        android:id="@+id/llDescriptionContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -21,13 +19,11 @@
         android:visibility="visible">
 
         <RelativeLayout
-            android:id="@+id/rlEntryView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/tw__solid_white"
             android:paddingBottom="10dp"
-            android:paddingTop="5dp"
-            android:visibility="visible">
+            android:paddingTop="5dp">
 
             <TextView
                 android:id="@+id/txtViewNumber"
@@ -43,24 +39,21 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txtViewEntryContent"
+                android:id="@+id/txtDescriptionContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_toEndOf="@+id/txtViewNumber"
                 android:layout_toStartOf="@+id/btnDeleteView"
                 android:layout_weight="0.8"
-                android:hint="@string/str_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Title" />
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rlEntryImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:visibility="visible">
+            android:paddingBottom="10dp">
 
             <ImageView
                 android:id="@+id/imgViewDescription"
@@ -72,8 +65,6 @@
                 android:maxHeight="380dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"/>
-
-
 
         </RelativeLayout>
     </LinearLayout>

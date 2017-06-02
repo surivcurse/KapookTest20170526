@@ -20,10 +20,10 @@
 
         <TextView
             android:paddingTop="5dp"
-            android:id="@+id/txtRendering"
+            android:id="@+id/txtHeadContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ใส่เนื้อหาที่นี่"
+            android:text="เรื่องเล่า"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/buttonOn" />
 
@@ -31,31 +31,10 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcvContentContrainer"
+        android:id="@+id/rcvContentContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"></android.support.v7.widget.RecyclerView>
-
-
-    <Button
-        android:id="@+id/btnAddDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="5dp"
-        android:background="@color/buttonOn"
-        android:drawableLeft="@drawable/ic_list_wt"
-        android:drawablePadding="3dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        android:text="เพิ่มเนื้อหา"
-        android:textColor="@color/tw__solid_white" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="20dp"
-        android:src="@drawable/layout_footer" />
 
 
 </LinearLayout>

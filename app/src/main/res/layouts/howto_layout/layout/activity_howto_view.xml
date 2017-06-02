@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.me.kapooktest.EntryContentViewActivity">
+    tools:context="com.app.me.kapooktest.HowtoViewActivity">
 
-    <include layout="@layout/contrainer_entry_view_content_layout" />
+
+    <include layout="@layout/contrainer_list_content_view_layout"/>
+
+
 
 </android.support.design.widget.CoordinatorLayout>

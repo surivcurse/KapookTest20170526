@@ -99,6 +99,7 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
 
 
 
+
         private boolean isTyping = false;
         private Bitmap bm;
 
@@ -117,7 +118,7 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
             btnDragUp = (ImageButton)  view.findViewById(R.id.btnDragUp);
             btnDragDown = (ImageButton)  view.findViewById(R.id.btnDragDown);
 
-            llEntryContent = (LinearLayout) view.findViewById(R.id.llEntryContent);
+            llEntryContent = (LinearLayout) view.findViewById(R.id.llDescriptionContent);
 
             rlEntryEdit = (RelativeLayout) view.findViewById(R.id.rlEntryEdit);
             txtEditNumber = (TextView) view.findViewById(R.id.txtEditNumber);
@@ -127,7 +128,7 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
 
             rlEntryView = (RelativeLayout) view.findViewById(R.id.rlEntryView);
             txtViewNumber = (TextView) view.findViewById(R.id.txtViewNumber);
-            txtViewEntryContent = (TextView) view.findViewById(R.id.txtViewEntryContent);
+            txtViewEntryContent = (TextView) view.findViewById(R.id.txtDescriptionContent);
 
             rlEntryImageView = (RelativeLayout) view.findViewById(R.id.rlEntryImageView);
             imgViewDescription = (ImageView) view.findViewById(R.id.imgViewDescription);

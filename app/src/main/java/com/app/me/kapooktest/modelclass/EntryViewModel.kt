@@ -1,5 +1,5 @@
 package com.app.me.kapooktest.modelclass
-
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 /**
  * Created by SuRiV on 26/5/2560.
@@ -12,7 +12,9 @@ data class EntryViewContent(
         @SerializedName("prev") var prev:String?="",
         @SerializedName("info") var data_info:DataDetail?=null,
         @SerializedName("data") var data:ArrayList<ContentDetail>?=null
+
 ){
+
     data class ContentDetail(
             @SerializedName("_id") var _id:String, //"c0b3f9f0ebd1"
             @SerializedName("title") var title:String, //""
@@ -23,9 +25,9 @@ data class EntryViewContent(
             @SerializedName("sort") var sort:Int, // 1 2 3 4
             @SerializedName("views") var views:Int,//0
             @SerializedName("createAt") var createAt:String, //"2017-03-08T08:32:51Z"
-            @SerializedName("createAt_ts") var createAt_ts:Int, //1488961971
+            @SerializedName("createAt_ts") var createAt_ts:Long, //1488961971
             @SerializedName("updateAt") var updateAt:String, //"2017-03-08T08:32:51Z"
-            @SerializedName("updateAt_ts") var updateAt_ts:Int, //1488961971
+            @SerializedName("updateAt_ts") var updateAt_ts:Long, //1488961971
             @SerializedName("detail_user") var detail_user:DetailUser,
             @SerializedName("media") var media:DataMedia,
             @SerializedName("myposition") var myposition:MyPosition,
@@ -72,9 +74,9 @@ data class DetailUser(
 data class DataDetail(
         var _id:String, //"c07b5af7c729",
         var createAt:String, //"2017-03-08T08:28:15Z"
-        var createAt_ts:Int, //1488961695
+        var createAt_ts:Long, //1488961695
         var updateAt:String, //"2017-05-26T06:57:59Z",
-        var updateAt_ts:Int, //1495781879
+        var updateAt_ts:Long, //1495781879
         var status:Int, //1
         var cat:Cat,
         var slug:String, //"review-c07b5af7c729"
@@ -83,6 +85,8 @@ data class DataDetail(
         var title:String, //"รีวิว : ทริปเชียงคาน - ภูเรือ"
         var description:String, //"นึกอยากจะไปก็ไปกัน 2 คน ซัก 3 วัน 2 คืน หมดทริปนี้ไปเกือบหมื่น "
         var media:DataMedia,
+        @SerializedName("content") @Expose var content_list: ArrayList<String>,
+        @SerializedName("step") var step:List<Step>?=ArrayList<Step>(),
         var content_type:Int,  //4
         var number_card:Int, //0
         @SerializedName("link")
@@ -121,6 +125,11 @@ data class DataDetail(
                 var holder_step:String //"เขียนขั้นตอน/วิธีการเดินทาง"
         )
     }
+
+    data class Step(
+            @SerializedName("title") var title:String?=null,
+            @SerializedName("img") var img:String?=null,
+            @SerializedName("thumbnail") var thumbnail:String?=null)
 }
 
 

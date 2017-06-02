@@ -19,7 +19,7 @@
         android:paddingTop="5dp">
 
         <LinearLayout
-            android:id="@+id/llEntryContent"
+            android:id="@+id/llDescriptionContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -52,7 +52,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/txtViewEntryContent"
+                    android:id="@+id/txtDescriptionContent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"

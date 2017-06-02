@@ -31,6 +31,10 @@
     <string name="str_content">เนื้อหา...</string>
     <string name="str_input_link">ใส่ลิงก์...</string>
     <string name="title_activity_entry_view">EntryViewActivity</string>
+    <string name="title_activity_howto_view">HowtoViewActivity</string>
+    <string name="str_subscribe">ติดตาม</string>
+    <string name="str_read"> อ่าน</string>
+    <string name="str_tweet">ทวีต</string>
 
 
 </resources>

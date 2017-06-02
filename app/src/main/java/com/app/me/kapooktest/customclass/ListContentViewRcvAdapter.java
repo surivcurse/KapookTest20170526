@@ -1,6 +1,7 @@
 package com.app.me.kapooktest.customclass;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,10 +15,11 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 
+import com.app.me.kapooktest.EntryContentViewActivity;
+import com.app.me.kapooktest.HowtoContentViewActivity;
 import com.app.me.kapooktest.R;
 import com.app.me.kapooktest.modelclass.DataDetail;
 import com.app.me.kapooktest.modelclass.DetailUser;
-import com.app.me.kapooktest.modelclass.EntryViewModel;
 
 
 import java.text.ParseException;
@@ -30,13 +32,13 @@ import java.util.Date;
  * Created by SuRiV on 7/4/2560.
  */
 
-public class EntryViewRcvAdapter extends RecyclerView.Adapter<EntryViewRcvAdapter.ViewHolder> {
+public class ListContentViewRcvAdapter extends RecyclerView.Adapter<ListContentViewRcvAdapter.ViewHolder> {
     private ArrayList<DataDetail> contents;
     private Context context;
     private DetailUser detailUser;
     private AQuery aQuery;
 
-    public EntryViewRcvAdapter(ArrayList<DataDetail> contents, DetailUser detailUser) {
+    public ListContentViewRcvAdapter(ArrayList<DataDetail> contents, DetailUser detailUser) {
         this.contents = contents;
         this.detailUser = detailUser;
     }
@@ -74,7 +76,7 @@ public class EntryViewRcvAdapter extends RecyclerView.Adapter<EntryViewRcvAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_description_entry_view, parent, false);
+                .inflate(R.layout.item_list_content, parent, false);
         aQuery = new AQuery(parent.getContext());
         return new ViewHolder(itemView);
     }
@@ -87,6 +89,10 @@ public class EntryViewRcvAdapter extends RecyclerView.Adapter<EntryViewRcvAdapte
         holder.txtCategoryName.setText(content.getCat().getName());
         holder.txtCountView.setText(String.valueOf(content.getViews()));
         holder.txtProfileName.setText(detailUser.getDisplay());
+        int countStep= content.getNumber_card()!=0? content.getNumber_card() : content.getStep().size();
+
+
+        holder.txtCountContent.setText(String.valueOf(countStep));
 
         Date nowDate;
         String strDate = null;
@@ -142,7 +148,19 @@ public class EntryViewRcvAdapter extends RecyclerView.Adapter<EntryViewRcvAdapte
         View.OnClickListener onClickData = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+               Intent intentContent=new Intent();
+               switch(content.getContent_type()){
+                   case 4:
+                       intentContent = new Intent(v.getContext(), EntryContentViewActivity.class);
+                       break;
+                   case 6:
+                       intentContent = new Intent(v.getContext(), HowtoContentViewActivity.class);
+                       break;
+                }
+                if(intentContent!=new Intent()){
+                    intentContent.putExtra("CONTENT_ID",content.get_id());
+                    v.getContext().startActivity(intentContent);
+                }
             }
         };
         holder.imgTitle.setOnClickListener(onClickData);

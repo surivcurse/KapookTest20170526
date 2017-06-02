@@ -109,8 +109,10 @@
         <activity android:name=".ChoiceCategoryActivity" />
         <activity android:name=".HowtoActivity" />
         <activity android:name=".EntryActivity" />
-        <activity android:name=".EntryViewActivity"/>
-        <activity android:name=".EntryContentViewActivity"/>
+        <activity android:name=".EntryViewActivity" />
+        <activity android:name=".EntryContentViewActivity" />
+        <activity android:name=".HowtoViewActivity"></activity>
+        <activity android:name=".HowtoContentViewActivity" />
     </application>
 
 </manifest>

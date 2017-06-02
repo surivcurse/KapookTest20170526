@@ -217,6 +217,8 @@ private Context context;
         int id = item.getItemId();
         switch (id){
             case R.id.howtoView:
+                Intent howtoViewActivity = new Intent(this.getApplicationContext() ,HowtoViewActivity.class);
+                startActivityForResult (howtoViewActivity,0);
                 return true;
             case R.id.entryView:
                 Intent entryViewActivity = new Intent(this.getApplicationContext() ,EntryViewActivity.class);

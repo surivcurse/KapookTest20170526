@@ -33,6 +33,7 @@ android {
         main {
             res.srcDirs = [
                     'src/main/res',
+                    'src/main/res/layouts/description_content',
                     'src/main/res/layouts/dialog_layout',
                     'src/main/res/layouts/category_layout',
                     'src/main/res/layouts/content_layout',

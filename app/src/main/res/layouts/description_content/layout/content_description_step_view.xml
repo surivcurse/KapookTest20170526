@@ -1,6 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:padding="10dp"
     android:visibility="visible">
@@ -31,7 +32,7 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rcvEntryContainer"
+        android:id="@+id/rcvStepContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="5dp"></android.support.v7.widget.RecyclerView>
@@ -48,7 +49,7 @@
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
         android:text="ส่งการบ้านหรือภาพรีวิว"
-        android:textColor="@color/tw__solid_white" />
-
+        android:textColor="@color/tw__solid_white"
+        tools:ignore="RtlHardcoded" />
 
 </LinearLayout>

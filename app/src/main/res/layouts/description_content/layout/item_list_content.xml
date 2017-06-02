@@ -14,7 +14,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <include layout="@layout/header_content_view"/>
-    <include layout="@layout/content_entry_view_paragraph1"/>
+    <include layout="@layout/description_content_paragraph1"/>
 </LinearLayout>
 
 

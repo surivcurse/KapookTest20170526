@@ -60,7 +60,6 @@
                     android:textColor="@color/com_facebook_button_background_color_focused_disabled"
                     android:textSize="18sp" />
             </LinearLayout>
-
         </LinearLayout>
 
 
@@ -81,9 +80,6 @@
                 android:background="@drawable/bg_button_3dot_black"
                 app:srcCompat="@drawable/ic_dots_vertical" />
         </LinearLayout>
-
-
     </LinearLayout>
-
 
 </LinearLayout>
