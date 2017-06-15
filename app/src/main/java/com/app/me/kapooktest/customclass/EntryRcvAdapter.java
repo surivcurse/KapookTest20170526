@@ -63,6 +63,7 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
     public static int[] RECYCLER_LOCATION = new int[2];
     private static boolean isEntered = false;
     private static int lastEnter = 0;
+    public static final int RESULT_SELECT_PICTURE = 9596;
 
     NestedScrollView  nestedView;
     private ManageFileHelper manageFileHelper;
@@ -96,9 +97,6 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
         private RelativeLayout rlEntryImageView;
         private ImageView imgViewDescription;
         private ImageButton imgBtnDeletePic;
-
-
-
 
         private boolean isTyping = false;
         private Bitmap bm;
@@ -150,7 +148,7 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
                 .inflate(R.layout.item_description_entry, parent, false);
         mRecyclerView = (RecyclerView) parent;
         context = parent.getContext();
-        manageFileHelper = new ManageFileHelper(context);
+        manageFileHelper = new ManageFileHelper(context,RESULT_SELECT_PICTURE);
         nestedView = (NestedScrollView) mRecyclerView.getParent().getParent().getParent();
         return new ViewHolder(itemView);
     }
@@ -735,7 +733,7 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == ManageFileHelper.SELECT_PICTURE){
+        if(requestCode == RESULT_SELECT_PICTURE){
             if(data != null){
                 new LoadBitmap(requestCode,resultCode,data).execute();
             }
@@ -755,7 +753,7 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
 
         @Override
         protected Void doInBackground(Void... params) {
-            manageFileHelper.onActivityResult(requestCode,resultCode,data);
+            manageFileHelper.onActivityResult(data);
             return null;
         }
 

@@ -39,14 +39,33 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-
 import com.androidquery.AQuery;
 import com.app.me.kapooktest.R;
+import com.app.me.kapooktest.helper.LoadBitmap;
 import com.app.me.kapooktest.helper.ManageFileHelper;
+import com.app.me.kapooktest.modelclass.HowToModel;
+import com.app.me.kapooktest.modelclass.ImagePath;
+import com.app.me.kapooktest.modelclass.MediaDetail;
+import com.google.gson.Gson;
 
 import static com.app.me.kapooktest.modelclass.HowToModel.*;
 
+import java.io.File;
+
+import java.io.IOException;
 import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.client.methods.CloseableHttpResponse;
+import cz.msebera.android.httpclient.client.methods.HttpPost;
+import cz.msebera.android.httpclient.entity.ContentType;
+import cz.msebera.android.httpclient.entity.mime.HttpMultipartMode;
+import cz.msebera.android.httpclient.entity.mime.MultipartEntityBuilder;
+import cz.msebera.android.httpclient.entity.mime.content.ContentBody;
+import cz.msebera.android.httpclient.entity.mime.content.FileBody;
+import cz.msebera.android.httpclient.impl.client.CloseableHttpClient;
+import cz.msebera.android.httpclient.impl.client.HttpClientBuilder;
+import cz.msebera.android.httpclient.util.EntityUtils;
 
 /**
  * Created by SuRiV on 7/4/2560.
@@ -67,6 +86,10 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
     private static int[] VIEW_LOCATION = new int[2];
     public static int[] RECYCLER_LOCATION = new int[2];
     private ManageFileHelper manageFileHelper;
+    private AQuery aQuery;
+    private Gson gson = new Gson();
+    public static final int RESULT_SELECT_PICTURE = 9595;
+
 
     public HowToDescriptionRcvAdapter(ArrayList<DescriptionModel> contents) {
         this.contents = contents;
@@ -98,10 +121,8 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
         private ImageButton imgBtnDeletePic;
         private boolean isTyping;
         // End Layout Content_Paragraph3
-
         private ImageView imageView2;
 
-        public AQuery aq;
         public ViewHolder(View view) {
             super(view);
 
@@ -111,7 +132,7 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
             settingLayoutViewContent(view);
 
 
-            aq = new AQuery(view);
+
         }
 
         private void settingLayoutViewContent(View view){
@@ -140,33 +161,6 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
             btnDragDown = (ImageButton)  view.findViewById(R.id.btnDragDown);
         }
 
-        /*private void watchIsTyping(final DescriptionModel content){
-
-            rootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                Rect r = new Rect();
-                @Override
-                public void onGlobalLayout() {
-
-                    //r will be populated with the coordinates of your view that area still visible.
-                    rootView.getWindowVisibleDisplayFrame(r);
-                    int heightDiff = rootView.getRootView().getHeight() - (r.bottom - r.top);
-                    Log.d("RenderView", "heightDiff: "+heightDiff+" Holder"+getLayoutPosition());
-                    if (heightDiff > 200) { // if more than 100 pixels, its probably a keyboard...
-
-                        isTyping = true;
-                    } else {
-//to make sure this will call only once when keyboard is hide.
-                        if(isTyping){
-                            isTyping = false;
-
-                            switchLayout(false,content);
-
-
-                        }
-                    }
-                }
-            });
-        }*/
     }
 
     @Override
@@ -175,7 +169,8 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
                 .inflate(R.layout.item_description_howto, parent, false);
         mRecyclerView = (RecyclerView) parent;
         context = parent.getContext();
-        manageFileHelper = new ManageFileHelper(context);
+        aQuery = new AQuery(context);
+        manageFileHelper = new ManageFileHelper(context,RESULT_SELECT_PICTURE);
         return new ViewHolder(itemView);
     }
 
@@ -193,17 +188,17 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
         holder.llRenderingContrainer.setTag("");
 
         if(getItemCount() == 1){
-
             currentHolder = holder;
         }
         if(isAddNewItem && holder.getLayoutPosition() == getItemCount()-1){
             if(getItemCount() == 2){
+
                 layoutStart(currentHolder,null);
             }
             switchLayout(holder,true,content);
         }
 
-       // watchIsTyping(holder,content);
+        // watchIsTyping(holder,content);
 
     }
 
@@ -304,7 +299,7 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
         btnPhotoDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.campusstar_line);
+                // holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.campusstar_line);
                 switchLayout(holder,false,content);
                 addPictureHolder = holder;
                 manageFileHelper.createChoicePicture();
@@ -315,8 +310,9 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
         btnPhotoLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.pexels_photo_title);
-                switchLayout(holder,false,content);
+                //holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.pexels_photo_title);
+
+                showDialogInputLink(holder,content,"เพิ่มลิงก์...");
                 alertDialog.cancel();
             }
         });
@@ -333,6 +329,64 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
 
         alertDialog.setCanceledOnTouchOutside(true);
         alertDialog.show();
+
+    }
+
+    private void showDialogInputLink(final ViewHolder holder, final DescriptionModel content, String title){
+
+        final FrameLayout frameView = new FrameLayout(context);
+        adb = new AlertDialog.Builder(context);
+        adb.setIcon(R.drawable.ic_link_black);
+        adb.setTitle(title);
+        adb.setView(frameView);
+        final AlertDialog alertDialog = adb.create();
+        LayoutInflater inflater = alertDialog.getLayoutInflater();
+
+        View dialoglayout = inflater.inflate(R.layout.dialog_input_link, frameView);
+        final TextView txtHintInputLink = (TextView) dialoglayout.findViewById(R.id.txtHintInputLink);
+        final EditText edtInputLink = (EditText) dialoglayout.findViewById(R.id.edtInputLink);
+        Button btnInputLink = (Button) dialoglayout.findViewById(R.id.btnInputLink);
+        btnInputLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(edtInputLink.getText().toString().length() < 1){
+                    alertDialog.cancel();
+                    return;
+                }
+
+                if(edtInputLink.getText().toString().indexOf("http") == -1){
+                    txtHintInputLink.setVisibility(View.VISIBLE);
+                    txtHintInputLink.setText("กรุณาใส่ http:// หรือ https:// ไว้ด้านหน้า url");
+                    alertDialog.cancel();
+                    return;
+                }
+
+                manageFileHelper.loadImageFromLink(edtInputLink.getText().toString(),holder.imgViewDescription,content);
+                holder.edtDescription.clearFocus();
+                holder.rlDescriptionView.setVisibility(View.VISIBLE);
+                holder.rlDescriptionEdit.setVisibility(View.GONE);
+                holder.btnAddPhoto.setVisibility(View.INVISIBLE);
+                holder.imgBtnSetting.setVisibility(View.VISIBLE);
+                holder.imgBtnDeletePic.setVisibility(View.VISIBLE);
+                holder.imgViewDescription.requestLayout();
+
+                alertDialog.cancel();
+            }
+        });
+
+        edtInputLink.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    txtHintInputLink.setVisibility(View.VISIBLE);
+                }else{
+                    txtHintInputLink.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        alertDialog.setCanceledOnTouchOutside(true);
+        alertDialog.show();
+
 
     }
 
@@ -426,6 +480,7 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
         holder.txtViewDescription.setText(content.getTxtContent());
 
         if(holder.bm != null){
+
             content.setPicContent(holder.bm);
             setImageViewDescription(holder, content.getPicContent());
             holder.btnAddPhoto.setVisibility(View.INVISIBLE);
@@ -473,7 +528,7 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
                 if(focusPosition != 0){
                     //Select Upper Item In RecyclerView
                     itemMove(holder,focusPosition,upPosition);
-                   // mRecyclerView.scrollToPosition(focusPosition);
+                    // mRecyclerView.scrollToPosition(focusPosition);
                     int scrollTo = 0;
                     NestedScrollView nestedView = (NestedScrollView) mRecyclerView.getParent().getParent().getParent().getParent();
                     scrollTo = nestedView.getScrollY() - (holder.itemView.getHeight());
@@ -564,7 +619,7 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
                 ClipData dragData = new ClipData(holder.llRenderingContrainer.getTag().toString(),mimeTypes,item);
                 View.DragShadowBuilder myShadow = new View.DragShadowBuilder(holder.itemView);
                 myShadow.getView().setAlpha(1);
-               // switchLayout(holder,false,content);
+                // switchLayout(holder,false,content);
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     holder.llRenderingContrainer.startDragAndDrop(dragData, myShadow  , null, 0);
@@ -600,7 +655,7 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
                             lastEnter = toPosition;
                             mRecyclerView.getLocationOnScreen(RECYCLER_LOCATION);
                             v.getLocationOnScreen(VIEW_LOCATION);
-                           new Handler().postDelayed(new Runnable() {
+                            new Handler().postDelayed(new Runnable() {
 
                                 @Override
                                 public void run() {
@@ -623,8 +678,6 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
                         switchLayout(holder,false,content);
                         return true;
                     case DragEvent.ACTION_DRAG_ENDED:
-                        // the drag has ended
-                      //  Log.d("RenderView", "onDrag: ACTION_DRAG_ENDED "+currentDragPosition+" To "+toPosition+"\n");
 
                         if(lastEnter == toPosition){
                             if(isEntered ){
@@ -637,17 +690,11 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
                         return false;
 
                     case DragEvent.ACTION_DRAG_LOCATION:
-                        //EntryRcvAdapter adapter = (EntryRcvAdapter) recyclerView.getAdapter();
                         int translatedY = VIEW_LOCATION[1];
                         int rec_translatedY = RECYCLER_LOCATION[1];
 
                         int threshold = ItemHeight/2;
-//                        Log.d("TESTDRAG", "=============================================");
-//                        Log.d("TESTDRAG", "onDrag: [ItemHeight : "+ItemHeight+"] ");
-//                        Log.d("TESTDRAG", "onDrag: [To : "+toPosition+"] [From : ]"+fromPosition);
-//                        Log.d("RenderView", "translatedY < threshold : ["+translatedY+"] < [" +threshold+"] && rec_translatedY ["+rec_translatedY+"] < threshold ["+threshold+"]");
-//                        Log.d("TESTDRAG", "=============================================");
-                        // make a scrolling up due the y has passed the threshold
+
                         if (translatedY < threshold && rec_translatedY < threshold) {
 
                             // make a scroll up by 30 px
@@ -685,39 +732,32 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
         });
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data){
+    public void onActivityResult(Intent data){
+        final MediaDetail mediaDetail = contents.get(addPictureHolder.getLayoutPosition()).mediaDetail;
+
         if(data != null){
-            new LoadBitmap(requestCode,resultCode,data).execute();
-        }
-    }
-
-    private class LoadBitmap  extends AsyncTask<Void, Void, Void> {
-        int requestCode;
-        int resultCode;
-        Intent data;
-
-        public LoadBitmap (int requestCode, int resultCode, Intent data){
-            this.requestCode = requestCode;
-            this.resultCode = resultCode;
-            this.data = data;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            manageFileHelper.onActivityResult(requestCode,resultCode,data);
-            Log.d("ActivityResult", "Data is : doInBackground");
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            addPictureHolder.bm = manageFileHelper.getBm();
-            setImageViewDescription(addPictureHolder,addPictureHolder.bm);
-            contents.get(addPictureHolder.getLayoutPosition()).setPicContent(addPictureHolder.bm);
-            Log.d("ActivityResult", "Data is : onPostExecute :"+addPictureHolder.getLayoutPosition());
-
+            new LoadBitmap(data,mediaDetail,manageFileHelper){
+                @Override
+                public void onPostExecute(Void aVoid){
+                    super.onPostExecute(aVoid);
+                    addPictureHolder.bm = manageFileHelper.getBm();
+                    setImageViewDescription(addPictureHolder, addPictureHolder.bm);
+                    contents.get(addPictureHolder.getLayoutPosition()).setPicContent(addPictureHolder.bm);
+                }
+            }.execute();
         }
 
     }
+
+    public void setDescriptionSomeError(){
+        if(currentHolder.getLayoutPosition() == 0){
+            if(currentHolder.txtViewDescription.getText().length() < 1){
+                currentHolder.txtViewDescription.setHint("****กรุณากรอกข้อมูล****");
+                currentHolder.txtViewDescription.setHintTextColor(context.getColor(R.color.tw__composer_red));
+            }
+        }
+    }
+
+
+
 }

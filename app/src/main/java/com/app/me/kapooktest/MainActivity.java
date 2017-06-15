@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.DataSetObserver;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -16,7 +15,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -38,7 +36,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -51,19 +48,15 @@ import com.app.me.kapooktest.customclass.CustomViewPager;
 import com.app.me.kapooktest.customclass.EndlessRecyclerViewScrollListener;
 import com.app.me.kapooktest.customclass.HotContentAdapter;
 import com.app.me.kapooktest.customclass.JsonHelper;
-import com.app.me.kapooktest.customclass.NewContentAdapter;
 import com.app.me.kapooktest.customclass.VertialRecAdapter;
 import com.app.me.kapooktest.helper.FacebookHelper;
 import com.app.me.kapooktest.helper.LineHelper;
-import com.app.me.kapooktest.helper.ShareHandle;
 import com.app.me.kapooktest.modelclass.AllContentModel;
 import com.app.me.kapooktest.modelclass.ConstantModel;
 import com.app.me.kapooktest.modelclass.HotContentModel;
-import com.app.me.kapooktest.modelclass.NewContentModel;
 import com.app.me.kapooktest.modelclass.PortalHomeModel;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.share.widget.ShareButton;
 import com.facebook.share.widget.ShareDialog;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -76,7 +69,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.twitter.sdk.android.tweetcomposer.TweetComposer;
+import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -105,11 +98,12 @@ private Context context;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-
+    FloatingActionButton fab;
     private CustomViewPager mViewPager;
     private AQuery aQuery;
     private Toolbar toolbar;
     private NavigationView navigationView;
+    private ParseUser currentKapookUser;
     private static final String FIREBASE_SERVER_KEY = "AAAACLcrnik:APA91bEI52Wyz49OwoS6VNVb-U4NZlmU_qhDDhCJoDB0hfWukdpmKhW6xzM4fxiXA53AT62CYkLdRDmk3b4vsetdseVwMLF_PKtNkDhnpskOOla4nemnCRDiFzACPgw8VIcg7zP_k0hH";
     private AccessToken facebookAccesstoken;
     @Override
@@ -122,14 +116,12 @@ private Context context;
         setSupportActionBar(toolbar);
         aQuery = new AQuery(this);
         context = this;
-
-
+        fab = (FloatingActionButton) findViewById(R.id.fab);
 
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         facebookAccesstoken = getAccessToken();
-        this.drawerHambergerView();
         this.runFireBase();
 
         // Set up the ViewPager with the sections adapter.
@@ -142,8 +134,6 @@ private Context context;
 
         mViewPager.setOffscreenPageLimit(3);
         tabLayout.setupWithViewPager(mViewPager);
-
-        createFloatingAction();
 
 
 
@@ -642,9 +632,16 @@ private Context context;
                         FacebookHelper.logout();
                     }
 
+                    if(currentKapookUser != null){
+                        ParseUser.logOut();
+                        fab.setVisibility(View.GONE);
+                    }
+
                     if(LineHelper.checkStatusLineLogin(getApplicationContext())){
                         LineHelper.lineLogout();
                     }
+
+
                 }
 
             }
@@ -655,6 +652,21 @@ private Context context;
             FacebookHelper.loadUserProfile(facebookAccesstoken,navigationHeaderView);
             FacebookHelper.loadProfilePicture(facebookAccesstoken,navigationHeaderView);
         }
+        else if (currentKapookUser != null) {
+            // do stuff with the user
+            try {
+                txtProfileName.setText(currentKapookUser.get("display").toString());
+                txtProfileName.setVisibility(View.VISIBLE);
+                btnShowLogin.setText("SIGN OUT");
+            }catch (RuntimeException re){
+                ParseUser.logOut();
+                btnShowLogin.setText(getString(R.string.sign_in));
+                txtProfileName.setVisibility(View.GONE);
+            }
+
+            Log.d("MEMBER", "createHeaderHamberger: "+ currentKapookUser.getSessionToken() );
+
+        }
         else if(LineHelper.checkStatusLineLogin(getApplicationContext())){
             LineHelper.loadProfileUser(getApplicationContext(),navigationHeaderView);
         }
@@ -662,13 +674,17 @@ private Context context;
 
 
     private void createFloatingAction() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 openBottomSheet();
             }
         });
+
+        if(currentKapookUser == null){
+            fab.setVisibility(View.GONE);
+        }
     }
 
     private  void openBottomSheet() {
@@ -714,5 +730,18 @@ private Context context;
                 startActivity(intentChoiceCategory);
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+       Gson gson = new Gson();
+        currentKapookUser = ParseUser.getCurrentUser();
+
+        Log.d("Login", "onStart: "+gson.toJson(currentKapookUser));
+        Log.d("Login", "getObjectId: "+currentKapookUser.getObjectId());
+        this.drawerHambergerView();
+        this.createFloatingAction();
+
     }
 }

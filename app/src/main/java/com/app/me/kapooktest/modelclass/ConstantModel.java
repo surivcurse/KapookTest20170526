@@ -3,8 +3,8 @@ package com.app.me.kapooktest.modelclass;
 import android.content.Context;
 
 import com.app.me.kapooktest.helper.TabsSqLiteHandle;
+import com.parse.ParseUser;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -16,34 +16,38 @@ import static com.app.me.kapooktest.R.drawable.*;
 
 public class ConstantModel {
     //private TabsSqLiteHandle datasource = new TabsSqLiteHandle();
-    public static int TO_INTENT = 0;
-    private static final ArrayList<CategoryModel> DEFAULT_CATEGORY = new ArrayList<>(Arrays.asList(
-            new CategoryModel(1,ic_travel,"ท่องเที่ยว / ทริป")
-            ,new CategoryModel(2,ic_eat,"กินดื่ม")
-            ,new CategoryModel(3,ic_beauty,"แต่งหน้า")
-            ,new CategoryModel(4,ic_hair,"ทำผม")
-            ,new CategoryModel(5,ic_cooking,"ทำอาหาร / ขนม")
-            ,new CategoryModel(6,ic_body,"แฟชั่น")
-            ,new CategoryModel(7,ic_fitness,"ฟิตเนส")
-            ,new CategoryModel(8,ic_camera,"ถ่ายรูป")
-            ,new CategoryModel(9,ic_phone,"มือถือ")
-            ,new CategoryModel(10,ic_car,"รถยนต์")
-            ,new CategoryModel(11,ic_manage_home,"แต่งบ้านจัดสวน")
-            ,new CategoryModel(12,ic_pets,"สัตว์เลี้ยง")
-            ,new CategoryModel(13,ic_public,"อื่นๆ")
-        )
-    );
 
-    public static CategoryModel getCategoryByID(int categoryID){
-        CategoryModel categoryModel = null;
-        for (CategoryModel cm : DEFAULT_CATEGORY){
-            if(cm.getId() == categoryID){
+    public static class KapookPostContent{
+        public static ParseUser CURRENT_USER = ParseUser.getCurrentUser();
+        private static String jsonGetViewModel = "http://ts.entry.kapook.com/api/v1/entry/topic/user/";
+
+        public static String getJsonViewModel(int content_type){
+            return jsonGetViewModel+CURRENT_USER.getObjectId()+"?content_type="+content_type;
+        }
+
+
+    }
+
+    public static int TO_INTENT = 0;
+    private static final ArrayList<CategoryModel.CategoryData> DEFAULT_CATEGORY = new ArrayList<>();
+    public  static CategoryModel.CategoryData getCategoryByIndex(int position){
+        CategoryModel.CategoryData categoryModel = DEFAULT_CATEGORY.get(position);
+
+        return categoryModel;
+    }
+    public static CategoryModel.CategoryData getCategoryBySort(int categorySort){
+        CategoryModel.CategoryData categoryModel = null;
+        for (CategoryModel.CategoryData cm : DEFAULT_CATEGORY){
+            if(cm.getSort() == categorySort){
                 categoryModel = cm;
             }
         }
         return categoryModel;
     }
 
+    public static void setDefaultCategory(ArrayList<CategoryModel.CategoryData> categoryData){
+        DEFAULT_CATEGORY.addAll(categoryData);
+    }
 
     //Default Start Value
     private static final ArrayList<TabsModel> DEFAULT_TABS = new ArrayList<>(Arrays.asList(
@@ -126,45 +130,7 @@ public class ConstantModel {
 
     }
 
-    public static class CategoryModel{
-        private int id;
-        private int icon;
-        private String title;
-
-        public CategoryModel(int id,int icon,String title){
-            setId(id);
-            setIcon(icon);
-            setTitle(title);
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public int getIcon() {
-            return icon;
-        }
-
-        public void setIcon(int icon) {
-            this.icon = icon;
-        }
-
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String title) {
-            this.title = title;
-        }
-
-
-    }
-
-    public static ArrayList<CategoryModel> getCategoryModel(){
+    public static ArrayList<CategoryModel.CategoryData> getCategoryModel(){
         return DEFAULT_CATEGORY;
     }
 

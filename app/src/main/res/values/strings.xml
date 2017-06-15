@@ -7,7 +7,6 @@
     <string name="fb_login_protocol_scheme">fb431298490556813</string>
     <string name="btn_login_line">Continue with Line</string>
 
-
     <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -35,6 +34,12 @@
     <string name="str_subscribe">ติดตาม</string>
     <string name="str_read"> อ่าน</string>
     <string name="str_tweet">ทวีต</string>
+    <string name="title_activity_howto_home_work">HowtoHomeWorkActivity</string>
+    <string name="post_howto">สิ่งที่กำลังโพสต์นี้ จะไปอยู่ใน Howto เรื่อง :</string>
+    <string name="howto_homework">ส่งการบ้านหรือภาพรีวิว</string>
+    <string name="parse_server_url">https://api.domecloud.io/1/</string>
+    <string name="parse_app_id">dff470449bf2b58c5559acffa2434969</string>
+    <string name="parse_client_key">8270241574e24581745a931aaad15673</string>
 
 
 </resources>

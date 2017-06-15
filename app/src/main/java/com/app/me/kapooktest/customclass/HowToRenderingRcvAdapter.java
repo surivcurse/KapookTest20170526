@@ -43,6 +43,7 @@ import java.util.ArrayList;
 public class HowToRenderingRcvAdapter extends RecyclerView.Adapter<HowToRenderingRcvAdapter.ViewHolder> {
     private ArrayList<RenderingModel> contents;
     private Context context;
+    private ViewGroup viewGroup;
     private AlertDialog.Builder adb;
     private static int currentDragPosition = 0;
     private ViewHolder currentViewHolder;
@@ -115,6 +116,8 @@ public class HowToRenderingRcvAdapter extends RecyclerView.Adapter<HowToRenderin
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_rendering, parent, false);
         rcvRender = (RecyclerView) parent;
+
+        viewGroup = parent;
         return new ViewHolder(itemView);
     }
 
@@ -145,10 +148,9 @@ public class HowToRenderingRcvAdapter extends RecyclerView.Adapter<HowToRenderin
 
         holder.edtRendering.setText(content.getTxtContent());
         holder.txtRenderingView.setText(content.getTxtContent());
-
+        currentViewHolder = holder;
         if(getItemCount() > 1){
             if(holder.edtRendering.getText().toString().equals("")){
-                currentViewHolder = holder;
                 holder.switchView(true);
                 holder.edtRendering.setFocusable(true);
                 holder.edtRendering.requestFocus();
@@ -194,6 +196,9 @@ public class HowToRenderingRcvAdapter extends RecyclerView.Adapter<HowToRenderin
             public void onFocusChange(View v, boolean hasFocus) {
                 Log.d("Render", "onFocusChange: "+holder.getLayoutPosition()+" "+hasFocus);
                 if(!hasFocus){
+                    if(!holder.edtRendering.getText().equals(holder.txtRenderingView.getText())){
+                        content.setTxtContent(holder.edtRendering.getText().toString());
+                    }
                     holder.switchView(false);
                 }
             }
@@ -348,7 +353,6 @@ public class HowToRenderingRcvAdapter extends RecyclerView.Adapter<HowToRenderin
     }
 
     private void refreshContent(ViewHolder holder,RenderingModel content){
-        content.setNumberContent(holder.getLayoutPosition()+1);
         content.setTxtContent(holder.edtRendering.getText().toString());
         holder.txtRenderingView.setText(holder.edtRendering.getText());
 
@@ -366,5 +370,15 @@ public class HowToRenderingRcvAdapter extends RecyclerView.Adapter<HowToRenderin
 
     }
 
+    public void setRenderSomeError(){
+        if(currentViewHolder.getLayoutPosition() == 0){
+            if(currentViewHolder.edtRendering.getText().length() < 1){
+                currentViewHolder.edtRendering.setHint("****กรุณากรอกข้อมูล****");
+                currentViewHolder.edtRendering.setHintTextColor(context.getColor(R.color.tw__composer_red));
+                currentViewHolder.txtRenderingView.setHint("****กรุณากรอกข้อมูล****");
+                currentViewHolder.txtRenderingView.setHintTextColor(context.getColor(R.color.tw__composer_red));
+            }
+        }
+    }
 
 }

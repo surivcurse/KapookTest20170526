@@ -21,7 +21,6 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
             android:adjustViewBounds="true"
-            android:maxHeight="380dp"
             android:scaleType="centerCrop" />
 
         <TextView

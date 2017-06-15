@@ -3,22 +3,26 @@ package com.app.me.kapooktest.modelclass;
 import android.graphics.Bitmap;
 import android.util.Log;
 
-import com.google.android.gms.common.api.Api;
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 /**
  * Created by SuRiV on 4/5/2560.
  */
 
 public class HowToModel {
-    public static long HOWTO_ID = 0;
-    public static boolean STATUS_CONTENT = true;
+
+    public enum LINK_TYPE {
+        WEB_LINK,
+        CLIP_LINK
+    }
+    public static String HOWTO_ID = "";
+    public static int CONTENT_TYPE = 0;
+    public static int STATUS_CONTENT = 1;
     public static Bitmap PIC_TITLE = null;
+    public static MediaDetail mediaDetail = new MediaDetail();
     public static int CATEGORY_ID = 1;
+    public static String CATEGORY_OBJ = "";
     public static String TITLE = "";
     public static String SUBJECT = "";
 
@@ -51,6 +55,14 @@ public class HowToModel {
         }
     }
 
+    public static ArrayList<String> getContentArray(){
+        ArrayList<String> st = new ArrayList<>();
+        for (RenderingModel renderingModel:renderingModelList) {
+            st.add(renderingModel.getTxtContent());
+        }
+        return st;
+    }
+
     public static ArrayList<RenderingModel> getRenderingModelList() {
         return renderingModelList;
     }
@@ -60,61 +72,48 @@ public class HowToModel {
     }
 
     public static class RenderingModel{
-        private int numberContent;
         private String txtContent;
-
         public RenderingModel() {
             this.txtContent = "";
-            this.numberContent = getSizeRendering()+1;
         }
 
-        public RenderingModel(String txtContent,int numberContent) {
+        public RenderingModel(String txtContent) {
             this.txtContent = txtContent;
-            this.numberContent = numberContent;
         }
-
         public String getTxtContent() {
             return txtContent;
         }
-
         public void setTxtContent(String txtContent) {
             this.txtContent = txtContent;
         }
 
-        public int getNumberContent() {
-            return numberContent;
-        }
-
-        public void setNumberContent(int numberContent) {
-            this.numberContent = numberContent;
-        }
-
     }
 
+
     public static class DescriptionModel{
-        private int numberContent;
         private String txtContent;
         private Bitmap picContent;
+        public MediaDetail mediaDetail = new MediaDetail();
 
         public DescriptionModel() {
-            this.numberContent = getSizeDescription()+1;
             this.txtContent = "";
             this.picContent = null;
         }
+        /*public void setMediaDetail(ImageLink imageLink){
 
-        public DescriptionModel(int numberContent, String txtContent, Bitmap picContent) {
-            this.numberContent = numberContent;
-            this.txtContent = txtContent;
-            this.picContent = picContent;
-        }
+            mediaDetail.imgurl = imageLink.getImages().get(0).getUrl();
+            mediaDetail.thumbnail = imageLink.getImages().get(0).getUrl();
 
-        public int getNumberContent() {
-            return numberContent;
-        }
+            if(imageLink.getTypeembed()){
+                mediaDetail.clip  = imageLink.getOriginal_url();
+                mediaDetail.clip_title = imageLink.getTitle();
+                mediaDetail.clip_description = imageLink.getDescription();
+            }else{
+                mediaDetail.linkurl = imageLink.getOriginal_url();
+            }
+            mediaDetail.clip_provider = imageLink.getProvider();
 
-        public void setNumberContent(int numberContent) {
-            this.numberContent = numberContent;
-        }
+        }*/
 
         public String getTxtContent() {
             return txtContent;
@@ -133,7 +132,7 @@ public class HowToModel {
         }
 
     }
-    private static int getSizeDescription(){
+    public static int getSizeDescription(){
 
         try {
             return descriptionModelList.size();
@@ -142,7 +141,7 @@ public class HowToModel {
         }
     }
 
-    private static int getSizeRendering(){
+    public static int getSizeRendering(){
         try {
             return renderingModelList.size();
         }catch (NullPointerException nuE){
@@ -158,4 +157,6 @@ public class HowToModel {
         renderingModelList.clear();
         renderingModelList.add(new RenderingModel());
     }
+
+
 }

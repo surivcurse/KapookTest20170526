@@ -43,6 +43,7 @@
                     android:text="Email" />
 
                 <EditText
+                    android:id="@+id/edtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -66,6 +67,7 @@
 
 
                 <EditText
+                    android:id="@+id/edtPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -79,6 +81,7 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/btnLogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -86,6 +89,7 @@
                     android:text="เข้าสู่ระบบ" />
 
                 <Button
+                    android:id="@+id/btnForgetPassword"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/com_facebook_auth_dialog_cancel_background"

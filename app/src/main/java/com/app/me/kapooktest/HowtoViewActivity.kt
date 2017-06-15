@@ -9,6 +9,7 @@ import com.androidquery.AQuery
 import com.androidquery.callback.AjaxCallback
 import com.androidquery.callback.AjaxStatus
 import com.app.me.kapooktest.customclass.ListContentViewRcvAdapter
+import com.app.me.kapooktest.modelclass.ConstantModel
 import com.app.me.kapooktest.modelclass.EntryViewModel
 import com.google.gson.Gson
 import org.json.JSONObject
@@ -20,13 +21,13 @@ class HowtoViewActivity : AppCompatActivity() {
     private var listContentViewAdapter: ListContentViewRcvAdapter? = null
     private var gson : Gson? = null
     private var aQuery : AQuery? = null
-    private val jsonGetEntryViewModel = "http://ts.entry.kapook.com/api/v1/entry/topic/user/fd3dfcb12c16?content_type=6"
+    private var jsonGetEntryViewModel = ""
     private val header :Map<String,CharSequence> = mapOf("Appserect" to "d^w,j[vdsivd]")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_howto_view)
-
+        jsonGetEntryViewModel = ConstantModel.KapookPostContent.getJsonViewModel(6)
         rcvStepContrainer  = findViewById(R.id.rcvContentContrainer) as RecyclerView
         val mLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL

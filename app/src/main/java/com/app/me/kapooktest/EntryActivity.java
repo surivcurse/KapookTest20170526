@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -22,13 +23,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.me.kapooktest.customclass.EntryRcvAdapter;
+import com.app.me.kapooktest.modelclass.CategoryModel;
+import com.google.gson.Gson;
 
 import static com.app.me.kapooktest.modelclass.EntryModel.*;
 import static com.app.me.kapooktest.modelclass.ConstantModel.*;
 
 public class EntryActivity extends AppCompatActivity {
     private boolean doubleBackToExitPressedOnce = false;
-    private CategoryModel categoryModel;
+    private CategoryModel.CategoryData categoryModel;
     private AlertDialog.Builder adb;
 
     private RecyclerView rcvEntryContent;
@@ -52,13 +55,12 @@ public class EntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_entry);
         refreshData();
-
+        Gson gson = new Gson();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("เขียนเอนทรีที่คุณสนใจ");
         Bundle bundle = getIntent().getExtras();
         CATEGORY_ID = bundle.getInt("ITEM_ID");
-        categoryModel = getCategoryByID(CATEGORY_ID);
-
+        categoryModel = getCategoryByIndex(CATEGORY_ID);
 
         this.createContentParagraph1();
         this.createParagraph2(entryRcvAdapter);
@@ -68,7 +70,7 @@ public class EntryActivity extends AppCompatActivity {
 
     private void createHeaderView(){
         btnCategorySelect = (Button) findViewById(R.id.btnCategorySelect);
-        btnCategorySelect.setText(categoryModel.getTitle());
+        btnCategorySelect.setText(categoryModel.getName());
         btnCategorySelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,7 +156,6 @@ public class EntryActivity extends AppCompatActivity {
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
 
-
         rcvEntryContent = (RecyclerView) findViewById(R.id.rcvContentContrainer);
         rcvEntryContent.setHasFixedSize(true);
         rcvEntryContent.setLayoutManager(mLayoutManager);
@@ -172,8 +173,6 @@ public class EntryActivity extends AppCompatActivity {
 
             }
         });
-
-
 
     }
 
@@ -239,7 +238,6 @@ public class EntryActivity extends AppCompatActivity {
 
     private void switchLayoutParagraph1(boolean isImage) {
         if(isImage){
-
             llAddImage.setVisibility(View.GONE);
             rlImageTitle.setVisibility(View.VISIBLE);
 
@@ -285,4 +283,9 @@ public class EntryActivity extends AppCompatActivity {
         }
 
     }
+
+
+
+
+
 }

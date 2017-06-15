@@ -9,8 +9,10 @@ import com.androidquery.AQuery
 import com.androidquery.callback.AjaxCallback
 import com.androidquery.callback.AjaxStatus
 import com.app.me.kapooktest.customclass.ListContentViewRcvAdapter
+import com.app.me.kapooktest.modelclass.ConstantModel
 import com.app.me.kapooktest.modelclass.EntryViewModel
 import com.google.gson.Gson
+import com.parse.ParseUser
 import org.json.JSONObject
 
 
@@ -20,8 +22,8 @@ class EntryViewActivity : AppCompatActivity() {
     private var listContentViewAdapter: ListContentViewRcvAdapter? = null
     private var gson : Gson? = null
     private var aQuery : AQuery? = null
-    private var id_content = "c07b5af7c729"
-    private val jsonGetEntryViewModel = "http://ts.entry.kapook.com/api/v1/entry/topic/user/fd3dfcb12c16?content_type=4"
+
+    private var jsonGetEntryViewModel = ""
 
     private val header :Map<String,CharSequence> = mapOf("Appserect" to "d^w,j[vdsivd]") //Map<String,String>{Map("Appserect" , "d^w,j[vdsivd]")}
 
@@ -30,7 +32,8 @@ class EntryViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_entry_view)
-
+        //user_objectId = currentUser.objectId
+        jsonGetEntryViewModel = ConstantModel.KapookPostContent.getJsonViewModel(4)
         rcvStepContrainer  = findViewById(R.id.rcvContentContrainer) as RecyclerView
         val mLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         mLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -38,16 +41,16 @@ class EntryViewActivity : AppCompatActivity() {
         gson = Gson()
         aQuery = AQuery(this)
 
-        if(this!=null){
+
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
             supportActionBar!!.title = "เอนทรี"
-        }
+
 
         aQuery!!.ajax(jsonGetEntryViewModel, JSONObject::class.java ,object : AjaxCallback<JSONObject>(){
             override fun callback(url:String , jsonObject:JSONObject , status: AjaxStatus) {
 
                 super.callback(url,jsonObject,status)
-                if(jsonObject!=null) {
+                if(jsonObject!=JSONObject()) {
                     var allContentEntryViewModel: EntryViewModel =
                             gson!!.fromJson(jsonObject.toString(), EntryViewModel::class.java)
 

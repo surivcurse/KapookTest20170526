@@ -42,13 +42,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@color/buttonOn"
         android:drawableLeft="@drawable/ic_camera_wt"
         android:drawablePadding="3dp"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
-        android:text="ส่งการบ้านหรือภาพรีวิว"
+        android:text="@string/howto_homework"
         android:textColor="@color/tw__solid_white"
         tools:ignore="RtlHardcoded" />
 

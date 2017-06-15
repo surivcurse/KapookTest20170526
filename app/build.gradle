@@ -33,6 +33,7 @@ android {
         main {
             res.srcDirs = [
                     'src/main/res',
+                    'src/main/res/layouts/howto_layout/howto_homework_layout',
                     'src/main/res/layouts/description_content',
                     'src/main/res/layouts/dialog_layout',
                     'src/main/res/layouts/category_layout',
@@ -86,7 +87,9 @@ dependencies {
     compile('com.twitter.sdk.android:tweet-composer:2.3.1@aar') {
         transitive = true;
     }
-
+    compile 'com.parse.bolts:bolts-android:1.4.0'
+    compile 'com.parse:parse-android:1.15.1'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:appcompat-v7:25.3.1'

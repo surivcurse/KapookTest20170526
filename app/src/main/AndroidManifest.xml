@@ -14,7 +14,20 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".KapookApp"
+        >
+
+        <meta-data
+            android:name="com.parse.SERVER_URL"
+            android:value="@string/parse_server_url" />
+        <meta-data
+            android:name="com.parse.APPLICATION_ID"
+            android:value="@string/parse_app_id" />
+        <meta-data
+            android:name="com.parse.CLIENT_KEY"
+            android:value="@string/parse_client_key" />
+
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider431298490556813"
@@ -111,8 +124,9 @@
         <activity android:name=".EntryActivity" />
         <activity android:name=".EntryViewActivity" />
         <activity android:name=".EntryContentViewActivity" />
-        <activity android:name=".HowtoViewActivity"></activity>
+        <activity android:name=".HowtoViewActivity" />
         <activity android:name=".HowtoContentViewActivity" />
+        <activity android:name=".HowtoHomeWorkActivity"></activity>
     </application>
 
 </manifest>

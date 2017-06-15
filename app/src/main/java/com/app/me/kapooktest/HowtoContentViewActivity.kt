@@ -1,5 +1,7 @@
 package com.app.me.kapooktest
 
+import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -8,6 +10,7 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.view.View
 import android.widget.*
 import com.androidquery.AQuery
 import com.androidquery.callback.AjaxCallback
@@ -24,6 +27,7 @@ import org.json.JSONObject
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
+import com.app.me.kapooktest.modelclass.HowToCardModel.*
 
 
 class HowtoContentViewActivity : AppCompatActivity() {
@@ -62,6 +66,8 @@ class HowtoContentViewActivity : AppCompatActivity() {
     private var howtoContentAdapter :HowtoContentViewRcvAdapter? = null
     private var howtoStepAdapter :HowtoStepViewRcvAdapter? = null
     private var howtoCommentAdapter :HowtoCommentViewRcvAdapter? = null
+
+    private var btnAddDescription : Button? =  null
     
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,13 +101,20 @@ class HowtoContentViewActivity : AppCompatActivity() {
         recyclerHowtoViewStep = setDefaultRecyclerView(findViewById(R.id.rcvStepContainer) as RecyclerView)
         recyclerHowtoViewComment = setDefaultRecyclerView(findViewById(R.id.rcvCommentContainer) as RecyclerView)
 
+        btnAddDescription = findViewById(R.id.btnAddDescription) as Button
+        btnAddDescription!!.setOnClickListener( {
+            BM_CONTENT_TITLE = (imgTitle!!.drawable as BitmapDrawable).bitmap
+            val intentHomeWork = Intent(this,HowtoHomeWorkActivity::class.java)
+            startActivity(intentHomeWork)
+        })
+
         gson = Gson()
         aQuery = AQuery(this)
 
-        if(this!=null){
+
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
             supportActionBar!!.title = "ฮาวทู"
-        }
+
 
         aQuery!!.ajax(jsonGetEntryViewContent+""+content_id, JSONObject::class.java ,object : AjaxCallback<JSONObject>(){
 
@@ -113,19 +126,24 @@ class HowtoContentViewActivity : AppCompatActivity() {
 
                     val howtoContentData :
                             EntryViewContent = gson!!.fromJson(jsonObject.toString(), EntryViewContent::class.java)
-                    val imageUrl = if(howtoContentData.data_info!!.media.full_thumbnail != "")
-                                        howtoContentData.data_info!!.media.full_thumbnail
+
+                    val data_info = howtoContentData.data_info!!
+                    val imageUrl = if(data_info.media.full_thumbnail != "")
+                                        data_info.media.full_thumbnail
                                     else
-                                        howtoContentData.data_info!!.media.img
+                                        data_info.media.img
 
                     aQuery!!.id(imgTitle).image(imageUrl,true,false)
-                    aQuery!!.id(imgProfile).image(howtoContentData.data_info!!.detail_user.avatar,true,false)
-                    txtTitle!!.text = howtoContentData.data_info!!.title
-                    txtCountView!!.text = howtoContentData.data_info!!.views.toString()
-                    txtDescription!!.text = howtoContentData.data_info!!.description
-                    txtProfileName!!.text = howtoContentData.data_info!!.detail_user.display
-                    txtRendering!!.text=howtoContentData.data_info!!.cat.detail_howto.header_step
-                    txtHeadContent!!.text=howtoContentData.data_info!!.cat.detail_howto.header_content
+                    aQuery!!.id(imgProfile).image(data_info.detail_user.avatar,true,false)
+                    txtTitle!!.text = data_info.title
+                    CONTENT_NAME = data_info.title
+
+                    txtCountView!!.text = data_info.views.toString()
+                    txtDescription!!.text = data_info.description
+                    CONTENT_SUBTITLE = data_info.description
+                    txtProfileName!!.text = data_info.detail_user.display
+                    txtRendering!!.text=data_info.cat.detail_howto.header_step
+                    txtHeadContent!!.text=data_info.cat.detail_howto.header_content
                     val nowDate: Date
                     var strDate: String? = null
                     try {//2017-03-08T08:28:15Z
@@ -137,8 +155,8 @@ class HowtoContentViewActivity : AppCompatActivity() {
                     txtTimePost!!.text = strDate
                     shareFacebook!!.shareContent = setShareFacebookContent(howtoContentData.data_info)
                    //
-                    howtoContentAdapter = HowtoContentViewRcvAdapter(howtoContentData.data_info!!.content_list)
-                    howtoStepAdapter = HowtoStepViewRcvAdapter(howtoContentData.data_info!!.step)
+                    howtoContentAdapter = HowtoContentViewRcvAdapter(data_info.content_list)
+                    howtoStepAdapter = HowtoStepViewRcvAdapter(data_info.step)
                     howtoCommentAdapter = HowtoCommentViewRcvAdapter(howtoContentData.data)
 
                     recyclerHowtoViewContent!!.adapter = howtoContentAdapter

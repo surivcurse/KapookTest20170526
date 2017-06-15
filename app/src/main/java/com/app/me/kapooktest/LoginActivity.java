@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -17,22 +18,22 @@ import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 
 import com.facebook.login.widget.LoginButton;
-import com.google.gson.Gson;
 import com.linecorp.linesdk.LineApiResponse;
 import com.linecorp.linesdk.LineProfile;
 import com.linecorp.linesdk.api.LineApiClient;
 import com.linecorp.linesdk.api.LineApiClientBuilder;
 import com.linecorp.linesdk.auth.LineLoginApi;
 import com.linecorp.linesdk.auth.LineLoginResult;
-
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import com.parse.ConfigCallback;
+import com.parse.LogInCallback;
+import com.parse.Parse;
+import com.parse.ParseConfig;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.http.ParseHttpRequest;
 
 
 public class LoginActivity extends FragmentActivity {
@@ -44,15 +45,20 @@ public class LoginActivity extends FragmentActivity {
     Button btnLineLogin;
     private String lineBtnTxt;
 
+
     CallbackManager callbackManager;
     LoginButton facebookLoginButton;
     AccessTokenTracker accessTokenTracker;
     AccessToken accessToken;
 
     ImageButton imgBtnHome;
-
-
     AQuery aq;
+
+    EditText edtEmail;
+    EditText edtPassword;
+    Button btnLogin;
+    Button btnForgetPassword;
+
     public Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +67,39 @@ public class LoginActivity extends FragmentActivity {
         context = this;
         LINE_CHANEL_ID = getResources().getString(R.string.line_channel_id);
         lineBtnTxt = getResources().getString(R.string.btn_login_line);
+        edtEmail = (EditText) findViewById(R.id.edtEmail);
+        edtPassword = (EditText) findViewById(R.id.edtPassword);
+        btnLogin = (Button)  findViewById(R.id.btnLogin);
+        btnForgetPassword = (Button)  findViewById(R.id.btnForgetPassword);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String email = edtEmail.getText().toString();
+                final String pass = edtPassword.getText().toString();
+                if(email.length() > 0 && pass.length() > 0){
+
+                    ParseUser.logInInBackground(email, pass, new LogInCallback() {
+
+                        public void done(ParseUser user, ParseException e) {
+                            if (user != null) {
+                                Log.d("LOGIN", "onClick: "+email+"  and "+pass+"\nHas Login");
+                                // Hooray! The user is logged in.
+                                startActivity();
+                            } else {
+                                Log.d("LOGIN", "onClick: "+email+"  and "+pass+"\n"+e.toString()+"\n");
+
+                                // Signup failed. Look at the ParseException to see what happened.
+
+                            }
+
+                        }
+                    });
+                }
+
+            }
+        });
+
+
         btnLineLogin = (Button) findViewById(R.id.imgBtnLine);
         imgBtnHome = (ImageButton) findViewById(R.id.imgBtnHome);
         imgBtnHome.setOnClickListener(new View.OnClickListener() {

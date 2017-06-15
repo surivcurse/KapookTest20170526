@@ -62,9 +62,9 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="10dp"
-                android:maxHeight="380dp"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                />
 
         </RelativeLayout>
     </LinearLayout>
