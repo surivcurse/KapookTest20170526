@@ -11,11 +11,14 @@ import java.util.Arrays;
 
 public class EntryModel {
     public static long HOWTO_ID = 0;
+    public static final int CONTENT_TYPE=4;
     public static boolean STATUS_CONTENT = true;
     public static Bitmap PIC_TITLE = null;
     public static int CATEGORY_ID = 1;
     public static String TITLE = "";
     public static String SUBJECT = "";
+    public static String CATEGORY_OBJ = "";
+    public static MediaDetail mediaDetail = new MediaDetail();
 
     public static ArrayList<EntryContentModel> entryContentList = new ArrayList<>();
 
@@ -26,42 +29,25 @@ public class EntryModel {
 
 
     public static class EntryContentModel{
-        private int numberContent;
         private String txtContent;
         private Bitmap picContent;
-
+        public MediaDetail mediaDetail = new MediaDetail();
+        public String loadData = "";
+        public ImageLink mediaLinkDetail;
         public EntryContentModel() {
-            this.numberContent = getSizeEntryContent()+1;
             this.txtContent = "";
             this.picContent = null;
-        }
-
-        public EntryContentModel(int numberContent, String txtContent, Bitmap picContent) {
-            this.numberContent = numberContent;
-            this.txtContent = txtContent;
-            this.picContent = picContent;
-        }
-
-        public int getNumberContent() {
-            return numberContent;
-        }
-
-        public void setNumberContent(int numberContent) {
-            this.numberContent = numberContent;
         }
 
         public String getTxtContent() {
             return txtContent;
         }
-
         public void setTxtContent(String txtContent) {
             this.txtContent = txtContent;
         }
-
         public Bitmap getPicContent() {
             return picContent;
         }
-
         public void setPicContent(Bitmap picContent) {
             this.picContent = picContent;
         }

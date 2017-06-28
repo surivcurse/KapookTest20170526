@@ -10,7 +10,6 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
-import android.view.View
 import android.widget.*
 import com.androidquery.AQuery
 import com.androidquery.callback.AjaxCallback
@@ -27,7 +26,7 @@ import org.json.JSONObject
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-import com.app.me.kapooktest.modelclass.HowToCardModel.*
+import com.app.me.kapooktest.modelclass.HowtoCardModel.*
 
 
 class HowtoContentViewActivity : AppCompatActivity() {
@@ -76,6 +75,9 @@ class HowtoContentViewActivity : AppCompatActivity() {
 
         val bundle = intent.extras
         content_id = bundle.getString("CONTENT_ID")
+        CONTENT_ID = content_id
+        CONTENT_TYPE = 6
+
 
         imgTitle = findViewById(R.id.imgTitle) as ImageView
         txtTitle = findViewById(R.id.txtTitle) as TextView
@@ -111,10 +113,8 @@ class HowtoContentViewActivity : AppCompatActivity() {
         gson = Gson()
         aQuery = AQuery(this)
 
-
             supportActionBar!!.setDisplayHomeAsUpEnabled(true)
             supportActionBar!!.title = "ฮาวทู"
-
 
         aQuery!!.ajax(jsonGetEntryViewContent+""+content_id, JSONObject::class.java ,object : AjaxCallback<JSONObject>(){
 
@@ -136,11 +136,13 @@ class HowtoContentViewActivity : AppCompatActivity() {
                     aQuery!!.id(imgTitle).image(imageUrl,true,false)
                     aQuery!!.id(imgProfile).image(data_info.detail_user.avatar,true,false)
                     txtTitle!!.text = data_info.title
+
+                    SORT = data_info.number_card+1
                     CONTENT_NAME = data_info.title
+                    CONTENT_SUBTITLE = data_info.description
 
                     txtCountView!!.text = data_info.views.toString()
                     txtDescription!!.text = data_info.description
-                    CONTENT_SUBTITLE = data_info.description
                     txtProfileName!!.text = data_info.detail_user.display
                     txtRendering!!.text=data_info.cat.detail_howto.header_step
                     txtHeadContent!!.text=data_info.cat.detail_howto.header_content
@@ -164,7 +166,6 @@ class HowtoContentViewActivity : AppCompatActivity() {
                     recyclerHowtoViewComment!!.adapter = howtoCommentAdapter
 
                 }
-
             }
 
         }.header("Appserect","d^w,j[vdsivd]").method(AQuery.METHOD_GET))

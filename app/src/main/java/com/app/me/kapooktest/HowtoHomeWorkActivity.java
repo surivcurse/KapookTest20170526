@@ -1,5 +1,6 @@
 package com.app.me.kapooktest;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,10 +19,12 @@ import android.widget.TextView;
 
 import com.androidquery.AQuery;
 import com.app.me.kapooktest.customclass.CircleImageView;
+import com.app.me.kapooktest.helper.KapookPostContentHelper;
 import com.app.me.kapooktest.helper.LoadBitmap;
 import com.app.me.kapooktest.helper.ManageFileHelper;
+import com.app.me.kapooktest.modelclass.ConstantModel;
 
-import static com.app.me.kapooktest.modelclass.HowToCardModel.*;
+import static com.app.me.kapooktest.modelclass.HowtoCardModel.*;
 
 
 public class HowtoHomeWorkActivity extends AppCompatActivity {
@@ -48,6 +51,8 @@ public class HowtoHomeWorkActivity extends AppCompatActivity {
     private AlertDialog.Builder adb;
 
     private ManageFileHelper manageFileHelper;
+    private KapookPostContentHelper kapookPostContentHelper;
+
     private static final int RESULT_SELECT_PICTURE = 9598;
 
     @Override
@@ -58,7 +63,9 @@ public class HowtoHomeWorkActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("ส่งการบ้าน : "+CONTENT_NAME);
 
         aQuery = new AQuery(this);
-        manageFileHelper = new ManageFileHelper(this,RESULT_SELECT_PICTURE);
+        manageFileHelper = new ManageFileHelper(this.getApplicationContext(),RESULT_SELECT_PICTURE);
+        kapookPostContentHelper  = new KapookPostContentHelper(this, ConstantModel.KapookPostContent.CURRENT_USER.getSessionToken());
+
         imgProfile = (CircleImageView)findViewById(R.id.imgProfile);
         txtProfileName= (TextView)findViewById(R.id.txtProfileName);
         btnSwitchPublic= (Button)findViewById(R.id.btnSwitchPublic);
@@ -127,10 +134,8 @@ public class HowtoHomeWorkActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CARD_TEXT = edtTitle.getText().toString();
-
+                kapookPostContentHelper.postCardDataToServer();
                 // Post Data To Server
-
-
             }
         });
     }
@@ -169,8 +174,9 @@ public class HowtoHomeWorkActivity extends AppCompatActivity {
         btnPhotoDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BM_CARD_TITLE = BitmapFactory.decodeResource(getResources(), R.drawable.campusstar_line);
+               // BM_CARD_TITLE = BitmapFactory.decodeResource(getResources(), R.drawable.campusstar_line);
                // setImageViewTitleHowTo(BM_CARD_TITLE);
+                manageFileHelper.createChoicePicture();
                 alertDialog.cancel();
             }
         });
@@ -178,8 +184,9 @@ public class HowtoHomeWorkActivity extends AppCompatActivity {
         btnPhotoLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BM_CARD_TITLE = BitmapFactory.decodeResource(getResources(), R.drawable.pexels_photo_title);
-                setImageViewTitleHowTo(BM_CARD_TITLE);
+                //BM_CARD_TITLE = BitmapFactory.decodeResource(getResources(), R.drawable.pexels_photo_title);
+                //setImageViewTitleHowTo(BM_CARD_TITLE);
+                showDialogInputLink("ลิ้งก์...");
                 alertDialog.cancel();
             }
         });
@@ -198,6 +205,63 @@ public class HowtoHomeWorkActivity extends AppCompatActivity {
         alertDialog.show();
 
     }
+
+    private void showDialogInputLink(String title){
+        //switchLayout(false,holder);
+        final AlertDialog alertDialogLink = manageFileHelper.createDialogInputLink(imgTitle,IMAGE_DETAILS);
+        if(title != null || title != ""){
+            alertDialogLink.setTitle(title);
+        }
+        alertDialogLink.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // switchLayoutParagraph1(manageFileHelper.PICTURE_STATUS);
+                if(manageFileHelper.PICTURE_STATUS){
+
+                    manageFileHelper.PICTURE_STATUS = false;
+                }
+            }
+        });
+        alertDialogLink.show();
+    }
+
+//    private void showDialogInputLink(String title) {
+//        //https://siamblockchain.com/wp-content/uploads/2017/06/Bitcoin-vs-Ethereum-1.png
+//        final FrameLayout frameView = new FrameLayout(this);
+//        adb = new AlertDialog.Builder(this);
+//        adb.setIcon(R.drawable.ic_link_black);
+//        adb.setTitle(title);
+//        adb.setView(frameView);
+//        final AlertDialog alertDialog = adb.create();
+//        LayoutInflater inflater = alertDialog.getLayoutInflater();
+//
+//        View dialoglayout = inflater.inflate(R.layout.dialog_input_link, frameView);
+//        final TextView txtHintInputLink = (TextView) dialoglayout.findViewById(R.id.txtHintInputLink);
+//        final EditText edtInputLink = (EditText) dialoglayout.findViewById(R.id.edtInputLink);
+//        Button btnInputLink = (Button) dialoglayout.findViewById(R.id.btnInputLink);
+//        btnInputLink.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//               /* if (edtInputLink.getText().toString().length() < 1) {
+//                    alertDialog.cancel();
+//                    return;
+//                }
+//
+//                if (edtInputLink.getText().toString().indexOf("http") == -1) {
+//                    txtHintInputLink.setVisibility(View.VISIBLE);
+//                    txtHintInputLink.setText("กรุณาใส่ http:// หรือ https:// ไว้ด้านหน้า url");
+//                    alertDialog.cancel();
+//                    return;
+//                }*/
+//
+//                //Log.d("manageFileHelper", "Sent Link : "+edtInputLink.getText().toString());
+//                manageFileHelper.loadImageFromLink("https://my.kapook.com/imgkapook_2016/img_hilight_3_1497573134.jpg", imgTitle, IMAGE_DETAILS);
+//
+//                alertDialog.cancel();
+//            }
+//        });
+//        alertDialog.show();
+//    }
 
     private void setImageViewTitleHowTo(Bitmap picContent){
         imgTitle.setImageBitmap(picContent);

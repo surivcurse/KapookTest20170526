@@ -2,7 +2,9 @@ package com.app.me.kapooktest.helper;
 
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.app.me.kapooktest.modelclass.EntryModel;
 import com.app.me.kapooktest.modelclass.ImagePath;
 import com.app.me.kapooktest.modelclass.MediaDetail;
 import com.google.gson.Gson;
@@ -60,10 +62,10 @@ public class  LoadBitmap  extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPostExecute(String message) {
+            super.onPostExecute(message);
             ImagePath imagepath;
             imagepath = gson.fromJson(message,ImagePath.class);
             mediaDetail.setMediaDetail(imagepath);
-
         }
 
         public String ImageUpload(File picfile) {

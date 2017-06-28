@@ -607,7 +607,10 @@ private Context context;
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         final Menu menu = navigationView.getMenu();
-
+        if(currentKapookUser == null){
+            menu.findItem(R.id.entryView).setVisible(false);
+            menu.findItem(R.id.howtoView).setVisible(false);
+        }
         addNavigationItem(menu,ConstantModel.getAllTabs());
         createHeaderHamberger(navigationView.getHeaderView(0));
     }
@@ -736,10 +739,10 @@ private Context context;
     protected void onStart() {
         super.onStart();
        Gson gson = new Gson();
+
         currentKapookUser = ParseUser.getCurrentUser();
 
         Log.d("Login", "onStart: "+gson.toJson(currentKapookUser));
-        Log.d("Login", "getObjectId: "+currentKapookUser.getObjectId());
         this.drawerHambergerView();
         this.createFloatingAction();
 

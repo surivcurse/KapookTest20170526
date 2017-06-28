@@ -1,5 +1,6 @@
 package com.app.me.kapooktest;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,7 +11,6 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,11 +23,18 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.me.kapooktest.customclass.EntryRcvAdapter;
+import com.app.me.kapooktest.helper.KapookPostContentHelper;
+import com.app.me.kapooktest.helper.LoadBitmap;
+import com.app.me.kapooktest.helper.ManageFileHelper;
 import com.app.me.kapooktest.modelclass.CategoryModel;
+import com.app.me.kapooktest.modelclass.ConstantModel;
+import com.app.me.kapooktest.modelclass.EntryModel;
+import com.app.me.kapooktest.modelclass.MediaDetail;
 import com.google.gson.Gson;
 
 import static com.app.me.kapooktest.modelclass.EntryModel.*;
 import static com.app.me.kapooktest.modelclass.ConstantModel.*;
+
 
 public class EntryActivity extends AppCompatActivity {
     private boolean doubleBackToExitPressedOnce = false;
@@ -49,7 +56,9 @@ public class EntryActivity extends AppCompatActivity {
     private ImageButton imgBtnSetting;
     final private EntryRcvAdapter entryRcvAdapter = new EntryRcvAdapter(getEntryContentList());
     private TextView txtRendering;
-
+    private static final int REQUEST_CODE = 9599;
+    private ManageFileHelper manageFileHelper;
+    KapookPostContentHelper kapookPostContentHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +70,9 @@ public class EntryActivity extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         CATEGORY_ID = bundle.getInt("ITEM_ID");
         categoryModel = getCategoryByIndex(CATEGORY_ID);
+        CATEGORY_OBJ = categoryModel.getObjectId();
+        kapookPostContentHelper = new KapookPostContentHelper(this, ConstantModel.KapookPostContent.CURRENT_USER.getSessionToken());
+        manageFileHelper = new ManageFileHelper(this,REQUEST_CODE);
 
         this.createContentParagraph1();
         this.createParagraph2(entryRcvAdapter);
@@ -137,7 +149,6 @@ public class EntryActivity extends AppCompatActivity {
         llAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchLayoutParagraph1(true);
                 showDialogChoicePicture();
 
             }
@@ -202,8 +213,9 @@ public class EntryActivity extends AppCompatActivity {
         btnPhotoDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PIC_TITLE = BitmapFactory.decodeResource(getResources(), R.drawable.campusstar_line);
-                setImageViewTitleHowTo(PIC_TITLE);
+                //PIC_TITLE = BitmapFactory.decodeResource(getResources(), R.drawable.campusstar_line);
+               // setImageViewTitleHowTo(PIC_TITLE);
+                manageFileHelper.createChoicePicture();
                 alertDialog.cancel();
             }
         });
@@ -211,8 +223,16 @@ public class EntryActivity extends AppCompatActivity {
         btnPhotoLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PIC_TITLE = BitmapFactory.decodeResource(getResources(), R.drawable.pexels_photo_title);
-                setImageViewTitleHowTo(PIC_TITLE);
+                //PIC_TITLE = BitmapFactory.decodeResource(getResources(), R.drawable.pexels_photo_title);
+                //setImageViewTitleHowTo(PIC_TITLE);
+                final AlertDialog alertDialogLink = manageFileHelper.createDialogInputLink(imgTitle,EntryModel.mediaDetail);
+                alertDialogLink.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        switchLayoutParagraph1(manageFileHelper.PICTURE_STATUS);
+                    }
+                });
+                alertDialogLink.show();
                 alertDialog.cancel();
             }
         });
@@ -221,6 +241,7 @@ public class EntryActivity extends AppCompatActivity {
         btnPhotoCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 PIC_TITLE = BitmapFactory.decodeResource(getResources(), R.drawable.picture_camera);
                 setImageViewTitleHowTo(PIC_TITLE);
                 alertDialog.cancel();
@@ -231,6 +252,7 @@ public class EntryActivity extends AppCompatActivity {
         alertDialog.show();
 
     }
+
     private void setImageViewTitleHowTo(Bitmap picContent){
         imgTitle.setImageBitmap(picContent);
 
@@ -279,9 +301,31 @@ public class EntryActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if(resultCode == RESULT_OK){
-            entryRcvAdapter.onActivityResult(requestCode, resultCode, data);
-        }
 
+            switch (requestCode){
+                case REQUEST_CODE:
+                    if(data != null){
+                        asynLoadBitmap(data,mediaDetail,manageFileHelper);
+                        switchLayoutParagraph1(true);
+                    }
+                    break;
+                case EntryRcvAdapter.RESULT_SELECT_PICTURE:
+                    entryRcvAdapter.onActivityResult(requestCode, data);
+                 break;
+            }
+        }
+    }
+    private void asynLoadBitmap(Intent data, MediaDetail mediaDetail, final ManageFileHelper manageFileHelper){
+        new LoadBitmap(data,mediaDetail,manageFileHelper){
+            // Do Something When Done
+            @Override
+            public void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                PIC_TITLE = manageFileHelper.getBm();
+                setImageViewTitleHowTo(PIC_TITLE);
+
+            }
+        }.execute();
     }
 
 

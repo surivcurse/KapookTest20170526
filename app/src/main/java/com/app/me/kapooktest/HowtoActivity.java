@@ -2,6 +2,7 @@ package com.app.me.kapooktest;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -232,9 +233,7 @@ public class HowtoActivity extends AppCompatActivity {
         llAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                switchLayoutParagraph1(true);
                 showDialogChoicePicture();
-
             }
         });
         imgBtnSetting.setOnClickListener(new View.OnClickListener() {
@@ -278,9 +277,16 @@ public class HowtoActivity extends AppCompatActivity {
         btnPhotoLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //bm = BitmapFactory.decodeResource(getResources(), R.drawable.pexels_photo_title);
-                //setImageViewTitleHowTo(bm);
-                showDialogInputLink("ลิ้งค์...");
+
+                final AlertDialog alertDialogLink = manageFileHelper.createDialogInputLink(imgTitle,new HowToModel());
+                alertDialogLink.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        switchLayoutParagraph1(manageFileHelper.PICTURE_STATUS);
+                    }
+                });
+                alertDialogLink.show();
+
                 alertDialog.cancel();
             }
         });
@@ -296,6 +302,7 @@ public class HowtoActivity extends AppCompatActivity {
         });
 
         alertDialog.setCanceledOnTouchOutside(true);
+
         alertDialog.show();
 
     }
@@ -357,13 +364,11 @@ public class HowtoActivity extends AppCompatActivity {
     private void setAdapterRecyclerViewRendering(){
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
         rcvRendering = (RecyclerView) findViewById(R.id.rcvRenderingContrainer);
         rcvRendering.setLayoutManager(mLayoutManager);
         rcvRendering.setHasFixedSize(false);
         rcvRendering.setAdapter(renderingAdapter);
         rcvRendering.setItemAnimator(new DefaultItemAnimator());
-
     }
 
     @Override
@@ -403,58 +408,15 @@ public class HowtoActivity extends AppCompatActivity {
             switch (requestCode){
                 case RESULT_SELECT_PICTURE:
                     asynLoadBitmap(data,mediaDetail,manageFileHelper);
+                    switchLayoutParagraph1(true);
                     break;
                 case HowToDescriptionRcvAdapter.RESULT_SELECT_PICTURE:
                     descriptionAdapter.onActivityResult(data);
                     break;
-
             }
         }
     }
 
-    private void showDialogInputLink(String title) {
-//https://siamblockchain.com/wp-content/uploads/2017/06/Bitcoin-vs-Ethereum-1.png
-        final FrameLayout frameView = new FrameLayout(this);
-        adb = new AlertDialog.Builder(this);
-        adb.setIcon(R.drawable.ic_link_black);
-        adb.setTitle(title);
-        adb.setView(frameView);
-        final AlertDialog alertDialog = adb.create();
-        LayoutInflater inflater = alertDialog.getLayoutInflater();
-
-        View dialoglayout = inflater.inflate(R.layout.dialog_input_link, frameView);
-        final TextView txtHintInputLink = (TextView) dialoglayout.findViewById(R.id.txtHintInputLink);
-        final EditText edtInputLink = (EditText) dialoglayout.findViewById(R.id.edtInputLink);
-        Button btnInputLink = (Button) dialoglayout.findViewById(R.id.btnInputLink);
-        btnInputLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (edtInputLink.getText().toString().length() < 1) {
-                    alertDialog.cancel();
-                    return;
-                }
-
-                if (edtInputLink.getText().toString().indexOf("http") == -1) {
-                    txtHintInputLink.setVisibility(View.VISIBLE);
-                    txtHintInputLink.setText("กรุณาใส่ http:// หรือ https:// ไว้ด้านหน้า url");
-                    alertDialog.cancel();
-                    return;
-                }
-
-                manageFileHelper.loadImageFromLink(edtInputLink.getText().toString(), imgTitle, new HowToModel());
-                // holder.edtDescription.clearFocus();
-                // holder.rlDescriptionView.setVisibility(View.VISIBLE);
-                //holder.rlDescriptionEdit.setVisibility(View.GONE);
-                // holder.btnAddPhoto.setVisibility(View.INVISIBLE);
-                //  holder.imgBtnSetting.setVisibility(View.VISIBLE);
-                //  holder.imgBtnDeletePic.setVisibility(View.VISIBLE);
-                // holder.imgViewDescription.requestLayout();
-
-                alertDialog.cancel();
-            }
-        });
-        alertDialog.show();
-    }
     private void asynLoadBitmap(Intent data, MediaDetail mediaDetail, final ManageFileHelper manageFileHelper){
         new LoadBitmap(data,mediaDetail,manageFileHelper){
             // Do Something When Done

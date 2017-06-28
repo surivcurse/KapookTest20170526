@@ -3,6 +3,7 @@ package com.app.me.kapooktest.customclass;
 import android.content.Context;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +17,10 @@ import com.app.me.kapooktest.R;
 import com.app.me.kapooktest.modelclass.DataDetail;
 import com.app.me.kapooktest.modelclass.EntryViewContent;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -81,16 +85,34 @@ public class HowtoCommentViewRcvAdapter extends RecyclerView.Adapter<HowtoCommen
 
         aQuery.id(holder.imgProfile).image(content.getDetail_user().getAvatar(),true,false);
         holder.txtProfileName.setText(content.getDetail_user().getDisplay());
-        holder.txtTimePost.setText(strDiff);
+
+        if(!strDiff.equals("")){
+            holder.txtTimePost.setText(strDiff);
+        }else{
+            String strDate ="";
+            Date nowDate;
+            try {//2017-03-08T08:28:15Z
+                nowDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'").parse(content.getCreateAt());
+                strDate = new SimpleDateFormat("dd MMMM yyyy kk:mm:ss").format(nowDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            holder.txtTimePost.setText(strDate);
+
+        }
+
         setOnClickListener(holder,content);
 
     }
 
     public String dateDifferent(long create_ts){
+
         long currentTime = System.currentTimeMillis()/1000;
+        Log.d("TIME","currentTime "+ currentTime+" dateDifferent: "+create_ts);
         long diff = currentTime-create_ts;
         String strDiff = "";
-
+//        currentTime 1497604504 dateDifferent: 1497627627
+//        dateDifferent: -23123
         long diffSeconds = diff  % 60;
         long diffMinutes = (diff / 60) % 60;
         long diffHours = diff / (60 * 60) % 24;
@@ -98,7 +120,7 @@ public class HowtoCommentViewRcvAdapter extends RecyclerView.Adapter<HowtoCommen
         long diffMonths = diff / (24 * 60 * 60 * 30)%12;
         long diffYears = diff / (24 * 60 * 60 * 30 * 12);
 
-
+        Log.d("TIME", "dateDifferent: "+diff);
         if(diffYears > 0) {
             strDiff = diffYears + " ปีที่แล้ว";
         }
@@ -113,7 +135,7 @@ public class HowtoCommentViewRcvAdapter extends RecyclerView.Adapter<HowtoCommen
         }else if(diffSeconds > 0){
             strDiff = "ไม่กี่วินาทีที่แล้ว";
         }
-
+        Log.d("TIME", "dateDifferent: "+strDiff);
         return strDiff;
     }
     private void setOnClickListener(final ViewHolder holder, final EntryViewContent.ContentDetail content){

@@ -118,15 +118,12 @@ public class HowToModel {
         public String getTxtContent() {
             return txtContent;
         }
-
         public void setTxtContent(String txtContent) {
             this.txtContent = txtContent;
         }
-
         public Bitmap getPicContent() {
             return picContent;
         }
-
         public void setPicContent(Bitmap picContent) {
             this.picContent = picContent;
         }

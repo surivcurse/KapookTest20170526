@@ -7,10 +7,8 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
@@ -23,7 +21,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -34,7 +35,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.app.me.kapooktest.R;
+import com.app.me.kapooktest.helper.KapookPostContentHelper;
+import com.app.me.kapooktest.helper.LoadBitmap;
 import com.app.me.kapooktest.helper.ManageFileHelper;
+import com.app.me.kapooktest.helper.VideoEnabledWebChromeClient;
+import com.app.me.kapooktest.helper.VideoEnabledWebView;
+import com.app.me.kapooktest.modelclass.ConstantModel;
+import com.app.me.kapooktest.modelclass.MediaDetail;
 
 import static com.app.me.kapooktest.modelclass.EntryModel.*;
 
@@ -48,8 +55,8 @@ import java.util.ArrayList;
 
 public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHolder> {
     private ArrayList<EntryContentModel> contents;
-    private static ViewHolder currentViewHolder;
     private static ViewHolder addPictureHolder;
+    private static ViewHolder currentViewHolder;
     public static boolean isNotifyChange = true;
     private static int currentDragPosition;
     private Context context;
@@ -64,6 +71,7 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
     private static boolean isEntered = false;
     private static int lastEnter = 0;
     public static final int RESULT_SELECT_PICTURE = 9596;
+    private KapookPostContentHelper kapookPostContentHelper;
 
     NestedScrollView  nestedView;
     private ManageFileHelper manageFileHelper;
@@ -98,15 +106,19 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
         private ImageView imgViewDescription;
         private ImageButton imgBtnDeletePic;
 
+        private VideoEnabledWebView webViewDescription;
+        private VideoEnabledWebChromeClient webChromeClient;
+        private RelativeLayout rlWebview;
+        private RelativeLayout rlEntryWebView;
+        private ImageButton imgBtnDeleteWeb;
+
         private boolean isTyping = false;
-        private Bitmap bm;
 
         private boolean currentViewIsEdit = false;
 
         public ViewHolder(View view) {
             super(view);
             rootView = view;
-            bm = null;
             llRenderingContrainer = (LinearLayout) view.findViewById(R.id.llRenderingContrainer);
 
             llButtonAddItem = (LinearLayout) view.findViewById(R.id.llButtonAddItem);
@@ -130,6 +142,64 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
 
             rlEntryImageView = (RelativeLayout) view.findViewById(R.id.rlEntryImageView);
             imgViewDescription = (ImageView) view.findViewById(R.id.imgViewDescription);
+            webViewDescription = (VideoEnabledWebView) view.findViewById(R.id.webView);
+            rlWebview = (RelativeLayout) view.findViewById(R.id.rlWebview);
+            rlEntryWebView = (RelativeLayout) view.findViewById(R.id.rlEntryWebView);
+// Initialize the VideoEnabledWebChromeClient and set event handlers
+            View nonVideoLayout = view.findViewById(R.id.nonVideoLayout); // Your own view, read class comments
+            ViewGroup videoLayout = (ViewGroup) view.findViewById(R.id.videoLayout); // Your own view, read class comments
+            //noinspection all
+            View loadingView =  LayoutInflater.from(context).inflate(R.layout.view_loading_video, null); // Your own view, read class comments
+            webChromeClient = new VideoEnabledWebChromeClient(nonVideoLayout, videoLayout, loadingView, webViewDescription) // See all available constructors...
+            {
+                // Subscribe to standard events, such as onProgressChanged()...
+                @Override
+                public void onProgressChanged(WebView view, int progress)
+                {
+                    // Your code...
+                }
+            };
+            webChromeClient.setOnToggledFullscreen(new VideoEnabledWebChromeClient.ToggledFullscreenCallback()
+            {
+                @Override
+                public void toggledFullscreen(boolean fullscreen)
+                {
+                    //Log.d("cr_Ime", "toggledFullscreen: fullscreen  = "+fullscreen);
+                    // Your code to handle the full-screen change, for example showing and hiding the title bar. Example:
+                    if (fullscreen)
+                    {
+                        WindowManager.LayoutParams attrs = ((Activity)context).getWindow().getAttributes();
+                        attrs.flags |= WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                        attrs.flags |= WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+                        ((Activity)context).getWindow().setAttributes(attrs);
+                        if (android.os.Build.VERSION.SDK_INT >= 14)
+                        {
+                            //noinspection all
+                            ((Activity)context).getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
+                        }
+                    }
+                    else
+                    {
+                        WindowManager.LayoutParams attrs = ((Activity)context).getWindow().getAttributes();
+                        attrs.flags &= ~WindowManager.LayoutParams.FLAG_FULLSCREEN;
+                        attrs.flags &= ~WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+                        ((Activity)context).getWindow().setAttributes(attrs);
+                        if (android.os.Build.VERSION.SDK_INT >= 14)
+                        {
+                            //noinspection all
+                            ((Activity)context).getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                        }
+                    }
+
+                }
+            });
+
+            // webView.getSettings().setUserAgentString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.36 (KHTML, like Gecko) Chrome/13.0.766.0 Safari/534.36");
+            webViewDescription.setWebChromeClient(webChromeClient);
+            // Call private class InsideWebViewClient
+            webViewDescription.setWebViewClient(new InsideWebViewClient());
+            webViewDescription.getSettings().setDefaultTextEncodingName("utf-8");
+
             imgBtnDeletePic = (ImageButton) view.findViewById(R.id.imgBtnDeletePic);
 
             itemView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
@@ -142,6 +212,15 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
         }
     }
 
+    private class InsideWebViewClient extends WebViewClient {
+        @Override
+        // Force links to be opened inside WebView and not in Default Browser
+        // Thanks http://stackoverflow.com/a/33681975/1815624
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            view.loadUrl(url);
+            return true;
+        }
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -189,12 +268,11 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
         holder.currentViewIsEdit = isEdit;
         layoutColorChange(isEdit,holder);
         if(isEdit){
-            if(currentViewHolder != null){
-                Log.d("switchLayout", "switchLayout: "+currentViewHolder.getLayoutPosition());
+            if(currentViewHolder != null && getItemCount() > 1){
                 switchLayout(false,currentViewHolder);
             }
-            currentViewHolder = holder;
-            switchLayoutToEdit(holder);
+             currentViewHolder = holder;
+             switchLayoutToEdit(holder);
         }else{
             switchLayoutToView(holder);
         }
@@ -228,6 +306,7 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
     }
 
     private void layoutColorChange(boolean isEdit,ViewHolder holder){
+        Log.d(TAG, "layoutColorChange: "+isEdit+" Holder : "+holder.getLayoutPosition());
         if(isEdit){
             holder.llButtonAddItem.setBackgroundColor(context.getColor(R.color.buttonOn));
             holder.llEntryContent.setBackgroundColor(context.getColor(R.color.bg_layout_howto_content));
@@ -245,6 +324,8 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
             holder.btnDragDown.setImageResource(R.drawable.ic_down_blue);
             holder.btnDragUp.setImageResource(R.drawable.ic_up_blue);
         }
+
+        holder.itemView.requestLayout();
     }
 
     @Override
@@ -253,14 +334,12 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
     }
 
     private void refreshContent(ViewHolder holder,EntryContentModel content){
-        content.setNumberContent(holder.getLayoutPosition()+1);
         content.setTxtContent(holder.edtEntryContent.getText().toString());
-        content.setPicContent(holder.bm);
+       // content.setPicContent(content.getPicContent());
 
     }
 
     private void onCreateHolder(ViewHolder holder,EntryContentModel content){
-
         setEntryImageView(holder,content);
         holder.llRenderingContrainer.setTag("");
         holder.edtEntryContent.setText(content.getTxtContent());
@@ -277,14 +356,18 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
 
     private void setEntryImageView(final ViewHolder holder, final EntryContentModel content){
         if(content.getPicContent() != null){
-            holder.bm = content.getPicContent();
+            //holder.bm = content.getPicContent();
             holder.rlEntryImageView.setVisibility(View.VISIBLE);
-            holder.imgViewDescription.setImageBitmap(holder.bm);
-
+            holder.imgViewDescription.setImageBitmap(content.getPicContent());
         }else{
             holder.rlEntryImageView.setVisibility(View.GONE);
+            if(content.loadData.length() > 1){
+                holder.rlEntryWebView.setVisibility(View.VISIBLE);
+            }else{
+                holder.rlEntryWebView.setVisibility(View.GONE);
+                holder.webViewDescription.loadData(content.loadData,"","");
+            }
         }
-
     }
 
     private void setOnClickListener(final ViewHolder holder, final EntryContentModel content){
@@ -305,10 +388,23 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
             }
         });
 
+        holder.imgBtnDeleteWeb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //holder.bm = null;
+                //content.setPicContent(null);
+                content.mediaLinkDetail = null;
+                refreshContent(holder,content);
+                setEntryImageView(holder,content);
+            }
+        });
+
         holder.imgBtnDeletePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.bm = null;
+                //holder.bm = null;
+                content.setPicContent(null);
+                content.mediaDetail = new MediaDetail();
                 refreshContent(holder,content);
                 setEntryImageView(holder,content);
             }
@@ -332,7 +428,9 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
         holder.btnAddLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialogInputLink(holder,content,"เพิ่มลิงก์...");
+
+                showDialogAddLink(holder,content,"เพิ่มลิงก์...",1);
+                //showDialogPictureLink(holder,content,"เพิ่มลิงก์...");
             }
         });
 
@@ -340,7 +438,8 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 //"เพิ่มลิงก์คลิปวิดีโอ"
-                showDialogInputLink(holder,content,"เพิ่มลิงก์คลิปวิดีโอ");
+                showDialogAddLink(holder,content,"เพิ่มลิงก์คลิปวิดีโอ",2);
+                //showDialogPictureLink(holder,content,"เพิ่มลิงก์คลิปวิดีโอ");
             }
         });
     }
@@ -361,13 +460,10 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
                 notifyItemRemoved(holder.getLayoutPosition());
                 notifyDataSetChanged();
                 isNotifyChange = true;
-
             }
         });
         adb.show();
     }
-
-
 
     private void setOnFocusChangeListener(final ViewHolder holder, final EntryContentModel content){
         holder.edtEntryContent.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -379,47 +475,6 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
                 }
             }
         });
-    }
-
-    private void showDialogInputLink(final ViewHolder holder,final EntryContentModel content,String title){
-
-        final FrameLayout frameView = new FrameLayout(context);
-        adb = new AlertDialog.Builder(context);
-        adb.setIcon(R.drawable.ic_link_black);
-        adb.setTitle(title);
-        adb.setView(frameView);
-        final AlertDialog alertDialog = adb.create();
-        LayoutInflater inflater = alertDialog.getLayoutInflater();
-
-        View dialoglayout = inflater.inflate(R.layout.dialog_input_link, frameView);
-        final TextView txtHintInputLink = (TextView) dialoglayout.findViewById(R.id.txtHintInputLink);
-        EditText edtInputLink = (EditText) dialoglayout.findViewById(R.id.edtInputLink);
-        Button btnInputLink = (Button) dialoglayout.findViewById(R.id.btnInputLink);
-        btnInputLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.picture_camera);
-                switchLayout(false,holder);
-                refreshContent(holder,content);
-                setEntryImageView(holder,content);
-                alertDialog.cancel();
-            }
-        });
-
-        edtInputLink.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                    txtHintInputLink.setVisibility(View.VISIBLE);
-                }else{
-                    txtHintInputLink.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-        alertDialog.setCanceledOnTouchOutside(true);
-        alertDialog.show();
-
-
     }
 
     private void showDialogChoicePicture(final ViewHolder holder,final EntryContentModel content){
@@ -438,11 +493,11 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
         btnPhotoDevice.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.campusstar_line);
-                switchLayout(false,holder);
-                refreshContent(holder,content);
+              //  holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.campusstar_line);
                 addPictureHolder = holder;
+                refreshContent(holder,content);
                 manageFileHelper.createChoicePicture();
+                switchLayout(false,holder);
                 //setEntryImageView(holder,content);
                 alertDialog.cancel();
             }
@@ -451,10 +506,12 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
         btnPhotoLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.pexels_photo_title);
-                switchLayout(false,holder);
-                refreshContent(holder,content);
-                setEntryImageView(holder,content);
+               // holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.pexels_photo_title);
+                //switchLayout(false,holder);
+                //refreshContent(holder,content);
+                //setEntryImageView(holder,content);
+
+                showDialogPictureLink(holder,content);
                 alertDialog.cancel();
             }
         });
@@ -463,21 +520,66 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
         btnPhotoCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.picture_camera);
+                content.setPicContent(BitmapFactory.decodeResource(context.getResources(), R.drawable.picture_camera));
                 switchLayout(false,holder);
-                refreshContent(holder,content);
-                setEntryImageView(holder,content);
+                //refreshContent(holder,content);
+                //setEntryImageView(holder,content);
                 alertDialog.cancel();
             }
         });
 
         alertDialog.setCanceledOnTouchOutside(true);
         alertDialog.show();
-
     }
+
+    private void showDialogAddLink(final ViewHolder holder,final EntryContentModel content,String title,int typeLink){
+        switchLayout(false,holder);
+        final AlertDialog alertDialogLink = manageFileHelper.createDialogInputLink(holder.webViewDescription,content.mediaLinkDetail,typeLink);
+        if(title != null || title != ""){
+            alertDialogLink.setTitle(title);
+        }
+        alertDialogLink.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // switchLayoutParagraph1(manageFileHelper.PICTURE_STATUS);
+                if(manageFileHelper.PICTURE_STATUS){
+                    Log.d(TAG, "onCancel: rlWebview is Visible");
+                    holder.rlEntryImageView.setVisibility(View.GONE);
+                    holder.rlEntryWebView.setVisibility(View.VISIBLE);
+                    manageFileHelper.PICTURE_STATUS = false;
+                    content.setPicContent(null);
+                    content.mediaDetail = new MediaDetail();
+                }
+            }
+        });
+        alertDialogLink.show();
+    }
+
+    private void showDialogPictureLink(final ViewHolder holder,final EntryContentModel content,String title){
+        switchLayout(false,holder);
+        final AlertDialog alertDialogLink = manageFileHelper.createDialogInputLink(holder.imgViewDescription,content.mediaDetail);
+        if(title != null || title != ""){
+            alertDialogLink.setTitle(title);
+        }
+        alertDialogLink.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // switchLayoutParagraph1(manageFileHelper.PICTURE_STATUS);
+                if(manageFileHelper.PICTURE_STATUS){
+                    holder.rlEntryImageView.setVisibility(View.VISIBLE);
+                    manageFileHelper.PICTURE_STATUS = false;
+                }
+            }
+        });
+        alertDialogLink.show();
+    }
+
+    private void showDialogPictureLink(final ViewHolder holder,final EntryContentModel content){
+        showDialogPictureLink(holder,content,null);
+    }
+
     protected  void itemMove(final ViewHolder holder,int upPosition,int downPosition){
         ViewHolder vHolder = (ViewHolder)mRecyclerView.findViewHolderForLayoutPosition(downPosition);
-
 
         vHolder.txtEditNumber.setText(String.valueOf(upPosition+1));
         vHolder.txtViewNumber.setText(String.valueOf(upPosition+1));
@@ -496,7 +598,6 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
             public void onClick(View v) {
                 int focusPosition = holder.getLayoutPosition();
                 int upPosition = focusPosition-1;
-
 
                 if(focusPosition != 0){
                     //Select Upper Item In RecyclerView
@@ -593,7 +694,6 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
                 } else {
                     holder.llRenderingContrainer.startDrag(dragData, myShadow, null, 0);
                 }
-
                 return false;
             }
         });
@@ -618,7 +718,6 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
                             Log.d(TAG, "onDrag: ACTION_DRAG_ENTERED =====================");
                             mRecyclerView.getLocationOnScreen(RECYCLER_LOCATION);
                             v.getLocationOnScreen(VIEW_LOCATION);
-
 
                             new Handler().postDelayed(new Runnable() {
 
@@ -688,8 +787,6 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
                         }
 
                         break;
-
-
                 }
                 return false;
             }
@@ -727,43 +824,40 @@ public class EntryRcvAdapter extends RecyclerView.Adapter<EntryRcvAdapter.ViewHo
     }
 
     public void onBackPressed(){
+        // Notify the VideoEnabledWebChromeClient, and handle it ourselves if it doesn't handle it
+
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(rootView.getWindowToken(), 0);
     }
 
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode , Intent data) {
         if(requestCode == RESULT_SELECT_PICTURE){
             if(data != null){
-                new LoadBitmap(requestCode,resultCode,data).execute();
+                EntryContentModel content = contents.get(addPictureHolder.getLayoutPosition());
+
+                asynLoadBitmap(data,content.mediaDetail,manageFileHelper);
+                //new LoadBitmap(requestCode,resultCode,data).execute();
             }
         }
     }
 
-    private class LoadBitmap  extends AsyncTask<Void, Void, Void> {
-        int requestCode;
-        int resultCode;
-        Intent data;
-
-        public LoadBitmap (int requestCode, int resultCode, Intent data){
-            this.requestCode = requestCode;
-            this.resultCode = resultCode;
-            this.data = data;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            manageFileHelper.onActivityResult(data);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            EntryContentModel content = contents.get(addPictureHolder.getLayoutPosition());
-            content.setPicContent(manageFileHelper.getBm());
-            setEntryImageView(addPictureHolder,content);
-        }
-
+    private void asynLoadBitmap(Intent data, MediaDetail mediaDetail, final ManageFileHelper manageFileHelper){
+        new LoadBitmap(data,mediaDetail,manageFileHelper){
+            // Do Something When Done
+            @Override
+            public void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                //PIC_TITLE = manageFileHelper.getBm();
+                EntryContentModel content = contents.get(addPictureHolder.getLayoutPosition());
+                content.setPicContent(manageFileHelper.getBm());
+                setEntryImageView(addPictureHolder,content);
+                content.mediaLinkDetail = null;
+                content.loadData = "";
+                //setEntryImageView(PIC_TITLE);
+            }
+        }.execute();
     }
+
+
 }

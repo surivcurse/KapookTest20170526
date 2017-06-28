@@ -18,6 +18,7 @@ import com.androidquery.AQuery;
 import com.app.me.kapooktest.EntryContentViewActivity;
 import com.app.me.kapooktest.HowtoContentViewActivity;
 import com.app.me.kapooktest.R;
+import com.app.me.kapooktest.helper.KapookPostContentHelper;
 import com.app.me.kapooktest.modelclass.DataDetail;
 import com.app.me.kapooktest.modelclass.DetailUser;
 
@@ -26,6 +27,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static com.app.me.kapooktest.modelclass.ConstantModel.KapookPostContent.CURRENT_USER;
 
 
 /**
@@ -37,6 +40,7 @@ public class ListContentViewRcvAdapter extends RecyclerView.Adapter<ListContentV
     private Context context;
     private DetailUser detailUser;
     private AQuery aQuery;
+    KapookPostContentHelper kapookPostContentHelper;
 
     public ListContentViewRcvAdapter(ArrayList<DataDetail> contents, DetailUser detailUser) {
         this.contents = contents;
@@ -78,6 +82,7 @@ public class ListContentViewRcvAdapter extends RecyclerView.Adapter<ListContentV
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_list_content, parent, false);
         aQuery = new AQuery(parent.getContext());
+        kapookPostContentHelper = new KapookPostContentHelper(context,CURRENT_USER.getSessionToken());
         return new ViewHolder(itemView);
     }
 
@@ -131,6 +136,7 @@ public class ListContentViewRcvAdapter extends RecyclerView.Adapter<ListContentV
                         switch (item.getItemId()) {
                             case R.id.action_delete:
                                 // openBottomSheet(viewClick,content);
+                                 kapookPostContentHelper.ajaxDeleteContent(content.get_id());
 
                                 break;
                             case R.id.action_edit:

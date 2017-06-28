@@ -79,6 +79,7 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
     private static int currentDragPosition;
     private ViewHolder currentHolder;
     private ViewHolder addPictureHolder;
+    private boolean statusButton = true;
     public static boolean isAddNewItem = false;
     private static boolean isEntered = false;
     private static int lastEnter = 0;
@@ -101,7 +102,6 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
         private LinearLayout llRenderingContrainer;
 
         // Layout For Edit Content
-        private Bitmap bm;
         private RelativeLayout rlDescriptionEdit;
         private TextView txtEditNumber;
         private ImageButton btnDelete;
@@ -127,7 +127,6 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
             super(view);
 
             rootView = view;
-            bm=null;
             settingLayoutEditContent(view);
             settingLayoutViewContent(view);
 
@@ -178,7 +177,6 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
     public void onBindViewHolder(final ViewHolder holder, int position) {
         final DescriptionModel content = contents.get(position);
         int index = position+1;
-        holder.bm = null;
         holder.txtViewNumber.setText(String.valueOf(index));
         holder.txtEditNumber.setText(String.valueOf(index));
         layoutStart(holder,content);
@@ -197,7 +195,6 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
             }
             switchLayout(holder,true,content);
         }
-
         // watchIsTyping(holder,content);
 
     }
@@ -207,6 +204,7 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
             holder.txtViewDescription.setText(content.getTxtContent());
             holder.edtDescription.setText(content.getTxtContent());
             setImageViewDescription(holder,content.getPicContent());
+            Log.d("New", "layoutStart: "+holder.getLayoutPosition()+" Data :"+gson.toJson(content));
         }
 
         if(getItemCount() > 1){
@@ -230,7 +228,6 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
     public void resetValue(ViewHolder holder){
         holder.txtViewDescription.setText("");
         holder.edtDescription.setText("");
-        holder.bm=null;
     }
 
     public void setActionOnClickListener(final ViewHolder holder,final DescriptionModel content){
@@ -266,9 +263,8 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
         holder.imgBtnDeletePic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.bm = null;
-                setImageViewDescription(holder,holder.bm);
-                content.setPicContent(holder.bm);
+                setImageViewDescription(holder,null);
+                content.setPicContent(null);
             }
         });
 
@@ -284,7 +280,7 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
     }
 
     private void showDialogChoicePicture(final ViewHolder holder,final DescriptionModel content){
-
+        statusButton = true;
         final FrameLayout frameView = new FrameLayout(context);
         adb = new AlertDialog.Builder(context);
         adb.setIcon(R.drawable.ic_picture_black);
@@ -300,9 +296,9 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
             @Override
             public void onClick(View v) {
                 // holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.campusstar_line);
-                switchLayout(holder,false,content);
                 addPictureHolder = holder;
                 manageFileHelper.createChoicePicture();
+                statusButton = false;
                 alertDialog.cancel();
             }
         });
@@ -311,8 +307,7 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
             @Override
             public void onClick(View v) {
                 //holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.pexels_photo_title);
-
-                showDialogInputLink(holder,content,"เพิ่มลิงก์...");
+                showDialogPictureLink(holder,content,"เพิ่มลิงก์...");
                 alertDialog.cancel();
             }
         });
@@ -321,74 +316,106 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
         btnPhotoCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.picture_camera);
-                switchLayout(holder,false,content);
-                alertDialog.cancel();
+                //holder.bm = BitmapFactory.decodeResource(context.getResources(), R.drawable.picture_camera);
+                //statusButton = false;
+               // switchLayout(holder,!statusButton,content);
+                //alertDialog.cancel();
             }
         });
 
         alertDialog.setCanceledOnTouchOutside(true);
+        alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                switchLayout(holder,!statusButton,content);
+            }
+        });
         alertDialog.show();
 
     }
 
-    private void showDialogInputLink(final ViewHolder holder, final DescriptionModel content, String title){
-
-        final FrameLayout frameView = new FrameLayout(context);
-        adb = new AlertDialog.Builder(context);
-        adb.setIcon(R.drawable.ic_link_black);
-        adb.setTitle(title);
-        adb.setView(frameView);
-        final AlertDialog alertDialog = adb.create();
-        LayoutInflater inflater = alertDialog.getLayoutInflater();
-
-        View dialoglayout = inflater.inflate(R.layout.dialog_input_link, frameView);
-        final TextView txtHintInputLink = (TextView) dialoglayout.findViewById(R.id.txtHintInputLink);
-        final EditText edtInputLink = (EditText) dialoglayout.findViewById(R.id.edtInputLink);
-        Button btnInputLink = (Button) dialoglayout.findViewById(R.id.btnInputLink);
-        btnInputLink.setOnClickListener(new View.OnClickListener() {
+    private void showDialogPictureLink(final ViewHolder holder,final DescriptionModel content,String title){
+        //switchLayout(false,holder);
+        final AlertDialog alertDialogLink = manageFileHelper.createDialogInputLink(holder.imgViewDescription,content);
+        if(title != null || title != ""){
+            alertDialogLink.setTitle(title);
+        }
+        alertDialogLink.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
-            public void onClick(View v) {
-                if(edtInputLink.getText().toString().length() < 1){
-                    alertDialog.cancel();
-                    return;
-                }
-
-                if(edtInputLink.getText().toString().indexOf("http") == -1){
-                    txtHintInputLink.setVisibility(View.VISIBLE);
-                    txtHintInputLink.setText("กรุณาใส่ http:// หรือ https:// ไว้ด้านหน้า url");
-                    alertDialog.cancel();
-                    return;
-                }
-
-                manageFileHelper.loadImageFromLink(edtInputLink.getText().toString(),holder.imgViewDescription,content);
-                holder.edtDescription.clearFocus();
-                holder.rlDescriptionView.setVisibility(View.VISIBLE);
-                holder.rlDescriptionEdit.setVisibility(View.GONE);
-                holder.btnAddPhoto.setVisibility(View.INVISIBLE);
-                holder.imgBtnSetting.setVisibility(View.VISIBLE);
-                holder.imgBtnDeletePic.setVisibility(View.VISIBLE);
-                holder.imgViewDescription.requestLayout();
-
-                alertDialog.cancel();
-            }
-        });
-
-        edtInputLink.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
-                    txtHintInputLink.setVisibility(View.VISIBLE);
-                }else{
-                    txtHintInputLink.setVisibility(View.INVISIBLE);
+            public void onCancel(DialogInterface dialog) {
+                // switchLayoutParagraph1(manageFileHelper.PICTURE_STATUS);
+                if(manageFileHelper.PICTURE_STATUS){
+                    holder.edtDescription.clearFocus();
+                    holder.rlDescriptionView.setVisibility(View.VISIBLE);
+                    holder.rlDescriptionEdit.setVisibility(View.GONE);
+                    holder.btnAddPhoto.setVisibility(View.INVISIBLE);
+                    holder.imgBtnSetting.setVisibility(View.VISIBLE);
+                    holder.imgBtnDeletePic.setVisibility(View.VISIBLE);
+                    holder.imgViewDescription.requestLayout();
+                    manageFileHelper.PICTURE_STATUS = false;
                 }
             }
         });
-        alertDialog.setCanceledOnTouchOutside(true);
-        alertDialog.show();
-
-
+        alertDialogLink.show();
     }
+
+//    private void showDialogInputLink(final ViewHolder holder, final DescriptionModel content, String title){
+//        statusButton = false;
+//        final FrameLayout frameView = new FrameLayout(context);
+//        adb = new AlertDialog.Builder(context);
+//        adb.setIcon(R.drawable.ic_link_black);
+//        adb.setTitle(title);
+//        adb.setView(frameView);
+//        final AlertDialog alertDialog = adb.create();
+//        LayoutInflater inflater = alertDialog.getLayoutInflater();
+//
+//        View dialoglayout = inflater.inflate(R.layout.dialog_input_link, frameView);
+//        final TextView txtHintInputLink = (TextView) dialoglayout.findViewById(R.id.txtHintInputLink);
+//        final EditText edtInputLink = (EditText) dialoglayout.findViewById(R.id.edtInputLink);
+//        Button btnInputLink = (Button) dialoglayout.findViewById(R.id.btnInputLink);
+//        btnInputLink.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if(edtInputLink.getText().toString().length() < 1){
+//                    return;
+//                }
+//
+//                if(edtInputLink.getText().toString().indexOf("http") == -1){
+//                    txtHintInputLink.setVisibility(View.VISIBLE);
+//                    txtHintInputLink.setText("กรุณาใส่ http:// หรือ https:// ไว้ด้านหน้า url");
+//                    return;
+//                }
+//
+//                manageFileHelper.loadImageFromLink(edtInputLink.getText().toString(),holder.imgViewDescription,content);
+//
+//
+//
+//            }
+//        });
+//
+//        edtInputLink.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if(hasFocus){
+//                    txtHintInputLink.animate().alpha(1f).start();
+//                    txtHintInputLink.setVisibility(View.VISIBLE);
+//                }else{
+//                    txtHintInputLink.animate().alpha(0f).start();
+//                    txtHintInputLink.setVisibility(View.INVISIBLE);
+//                }
+//            }
+//        });
+//        alertDialog.setCanceledOnTouchOutside(true);
+//        alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+//            @Override
+//            public void onCancel(DialogInterface dialog) {
+//                switchLayout(holder,!statusButton,content);
+//            }
+//        });
+//        alertDialog.show();
+//
+//
+//    }
 
     private void setImageViewDescription(final ViewHolder holder, Bitmap picContent){
         if(picContent != null){
@@ -431,9 +458,8 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
                 // TODO Auto-generated method stub
                 content.setPicContent(null);
                 contents.remove(content);
-                resetValue(holder);
-                holder.bm = null;
-                holder.imgViewDescription.setImageBitmap(null);
+                //resetValue(holder);
+                //holder.imgViewDescription.setImageBitmap(null);
                 notifyDataSetChanged();
             }
         });
@@ -455,9 +481,9 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
     private void switchLayout(ViewHolder holder,boolean isEdit,DescriptionModel content){
 
         if(isEdit){
-            if(currentHolder != null){
-                switchLayout(currentHolder,false,content);
-            }
+            /*if(currentHolder != null){
+                switchLayout(currentHolder,false,null);
+            }*/
             currentHolder = holder;
             holder.rlDescriptionView.setVisibility(View.GONE);
             holder.rlDescriptionEdit.setVisibility(View.VISIBLE);
@@ -476,13 +502,10 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
 
     private void whenSwitchToView(ViewHolder holder, DescriptionModel content){
         content.setTxtContent(holder.edtDescription.getText().toString());
-
         holder.txtViewDescription.setText(content.getTxtContent());
 
-        if(holder.bm != null){
-
-            content.setPicContent(holder.bm);
-            setImageViewDescription(holder, content.getPicContent());
+        if(content.getPicContent() != null){
+            //setImageViewDescription(holder, content.getPicContent());
             holder.btnAddPhoto.setVisibility(View.INVISIBLE);
         }else{
             holder.btnAddPhoto.setVisibility(View.VISIBLE);
@@ -504,7 +527,6 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
 
     protected  void itemMove(final ViewHolder holder,int upPosition,int downPosition){
         ViewHolder vHolder = (ViewHolder)mRecyclerView.findViewHolderForLayoutPosition(downPosition);
-
 
         vHolder.txtEditNumber.setText(String.valueOf(upPosition+1));
         vHolder.txtViewNumber.setText(String.valueOf(upPosition+1));
@@ -740,9 +762,11 @@ public class HowToDescriptionRcvAdapter extends RecyclerView.Adapter<HowToDescri
                 @Override
                 public void onPostExecute(Void aVoid){
                     super.onPostExecute(aVoid);
-                    addPictureHolder.bm = manageFileHelper.getBm();
-                    setImageViewDescription(addPictureHolder, addPictureHolder.bm);
-                    contents.get(addPictureHolder.getLayoutPosition()).setPicContent(addPictureHolder.bm);
+                    DescriptionModel content = contents.get(addPictureHolder.getLayoutPosition());
+                    content.setPicContent(manageFileHelper.getBm());
+                    setImageViewDescription(addPictureHolder, content.getPicContent());
+                    switchLayout(addPictureHolder,false,null);
+                    addPictureHolder = null;
                 }
             }.execute();
         }
